@@ -5,13 +5,6 @@ VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alcedosoft.AlcedoStudio", "Alcedosoft.AlcedoStudio\Alcedosoft.AlcedoStudio.csproj", "{27D258C2-3186-4C0E-876C-13BDE111439B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{C9324A41-D6DD-4676-9AC7-7BED2F2DA041}"
-	ProjectSection(SolutionItems) = preProject
-		alcedo.studio.conf = alcedo.studio.conf
-		alcedo.studio.crt = alcedo.studio.crt
-		alcedo.studio.key = alcedo.studio.key
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
