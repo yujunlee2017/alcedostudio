@@ -3,11 +3,12 @@
 public class NewSchemaCommand : Command
 {
     private readonly Workspace _workspace;
-    private readonly SchemaHandler _handler = new();
+    private readonly SchemaHandler _handler;
 
     public NewSchemaCommand(Workspace workspace)
     {
         _workspace = workspace;
+        _handler = new(workspace);
     }
 
     public override async void Execute(object? parameter)
@@ -21,13 +22,15 @@ public class NewSchemaCommand : Command
 
         if (await dialog.Result is { Cancelled: false } reuslt && reuslt.Data is FileSchema schema)
         {
-            await _handler.SaveAsync(_workspace.DirectoryHandle, schema);
+            await _handler.SaveAsync(schema);
 
             _workspace.Schemas.Add(schema);
 
             _workspace.SelectedSchema = schema;
 
             _workspace.StateHasChanged();
+
+            _workspace.Snackbar.Add("Schema Created", Severity.Success);
         }
 
         base.Execute(parameter);

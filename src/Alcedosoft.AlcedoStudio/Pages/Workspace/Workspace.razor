@@ -14,70 +14,16 @@ else
 {
     <MudGrid>
         <MudItem lg="4">
-            <MudPaper Elevation="2">
-                <MudToolBar>
-                    <MudIconButton Command="NewSchemaCommand"
-                               Icon="@Icons.Filled.Add"
-                               Color="Color.Tertiary"
-                               Title="New Schema" />
-                    <MudIconButton Command="GenerateCodeCommand"
-                               Icon="@Icons.Filled.ViewInAr"
-                               Color="Color.Secondary"
-                               Title="Generate Code" />
-                    <MudIconButton Command="GenerateCodeCommand"
-                               Icon="@Icons.Custom.Brands.MicrosoftVisualStudio"
-                               Color="Color.Primary"
-                               Title="Open In VSCode"
-                               Href="vscode://"
-                               Target="_blank"/>
-
-                    <MudSpacer />
-
-                    <MudToggleIconButton @bind-Toggled="@IsCode"
-                                     Icon="@Icons.Filled.Code"
-                                     Title="Toggle Code View"
-                                     Color="Color.Success"
-                                     ToggledIcon="@Icons.Filled.CodeOff"
-                                     ToggledTitle="Toggle Schema View"
-                                     ToggledColor="Color.Inherit" />
-                </MudToolBar>
-
-                <MudDivider />
-
-                @if (IsCode)
-                {
-                    <MudTreeView Items="@FileSystemItems"
-                         Hover="true"
-                         ExpandOnClick="true"
-                         @bind-SelectedValue="this.SelectedItem">
-                        <ItemTemplate>
-                            <MudTreeViewItem Value="@context"
-                                     Items="@context.Items"
-                                     Icon="@context.Icon"
-                                     IconColor="@context.IconColor"
-                                     Text="@context.Name"
-                                     Command="ClickItemCommand"
-                                     @bind-Expanded="@context.IsExpanded">
-                            </MudTreeViewItem>
-                        </ItemTemplate>
-                    </MudTreeView>
-                }
-                else
-                {
-                    <MudTreeView Items="@Schemas"
-                         Hover="true"
-                         @bind-SelectedValue="SelectedSchema">
-                        <ItemTemplate>
-                            <MudTreeViewItem Value="@context"
-                                     Icon="@context.Icon"
-                                     IconColor="@context.IconColor"
-                                     Text="@context.Name"
-                                     @bind-Expanded="@context.IsExpanded">
-                            </MudTreeViewItem>
-                        </ItemTemplate>
-                    </MudTreeView>
-                }
-            </MudPaper>
+            <WorkspaceExplorer @bind-IsCode="IsCode"
+                           @bind-SelectedItem="SelectedItem"
+                           @bind-SelectedSchema="SelectedSchema"
+                           NewSchemaCommand="NewSchemaCommand"
+                           EditSchemaCommand="EditSchemaCommand"
+                           RemoveSchemaCommand="RemoveSchemaCommand"
+                           Schemas="Schemas"
+                           FileSystemItems="FileSystemItems"
+                           ClickItemCommand="ClickItemCommand"
+                           GenerateCodeCommand="GenerateCodeCommand" />
         </MudItem>
 
         <MudItem lg="8">
@@ -102,8 +48,11 @@ else
     public ICommand OpenProjectCommand => new OpenProjectCommand(this);
     public ICommand CloneProjectCommand => new CloneProjectCommand(this);
 
-    public ICommand ClickItemCommand => new ClickItemCommand(this);
     public ICommand NewSchemaCommand => new NewSchemaCommand(this);
+    public ICommand EditSchemaCommand => new EditSchemaCommand(this);
+    public ICommand RemoveSchemaCommand => new RemoveSchemaCommand(this);
+
+    public ICommand ClickItemCommand => new ClickItemCommand(this);
     public ICommand GenerateCodeCommand => new GenerateCodeCommand(this);
 
     public FileSchema? SelectedSchema { get; set; }
@@ -114,8 +63,10 @@ else
     public HashSet<FileSystemItem> FileSystemItems { get; } = new();
     public FileSystemDirectoryHandle? DirectoryHandle { get; set; }
 
-    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
     [Inject] public IDialogService DialogService { get; set; } = null!;
+
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
     [Inject] public FileSystemAccessService FileSystemService { get; set; } = null!;
 
     public new void StateHasChanged()

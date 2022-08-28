@@ -1,6 +1,6 @@
 ﻿<MudDialog>
     <DialogContent>
-        <MudForm @ref="NewSchemaForm">
+        <MudForm @ref="EditSchemaForm">
             <MudTextField @bind-Value="@Schema.Name"
                           Label="Name"
                           Required="true"
@@ -21,24 +21,24 @@
 
     <DialogActions>
         <MudButton OnClick="Instance.Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Create</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Edit</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code
 {
+    [Parameter] public FileSchema Schema { get; set; } = new();
     [CascadingParameter] MudDialogInstance Instance { get; set; } = null!;
 
-    public MudForm? NewSchemaForm { get; set; }
-    public FileSchema Schema { get; set; } = new();
+    public MudForm? EditSchemaForm { get; set; }
 
     public async void Submit()
     {
-        if (this.NewSchemaForm is not null)
+        if (this.EditSchemaForm is not null)
         {
-            await this.NewSchemaForm.Validate();
+            await this.EditSchemaForm.Validate();
 
-            if (this.NewSchemaForm.IsValid)
+            if (this.EditSchemaForm.IsValid)
             {
                 this.Instance.Close(Schema);
             }

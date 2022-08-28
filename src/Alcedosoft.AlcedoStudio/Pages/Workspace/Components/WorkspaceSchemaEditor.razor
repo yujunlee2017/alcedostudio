@@ -37,13 +37,11 @@
 </MudDataGrid>
 
 @code {
-    private readonly SchemaHandler _handler = new();
-
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
     [Inject] public IDialogService DialogService { get; set; } = null!;
     [Parameter] public FileSchema Schema { get; set; } = null!;
 
-    public void CreateItem()
+    public async Task CreateItem()
     {
         this.Schema.Items.Add(new()
             {
@@ -52,6 +50,8 @@
                 DisplayName = "Field1",
                 Description = "Field1",
             });
+
+        await this.SaveAsync();
 
         this.Snackbar.Add("Item Created", Severity.Success);
     }
@@ -83,8 +83,21 @@
 
     public async Task OnItemChanged()
     {
-        this.Snackbar.Add("Item Updated", Severity.Success);
+        await this.SaveAsync();
 
-        await _handler.SaveAsync(this.Schema);
+        this.Snackbar.Add("Item Updated", Severity.Success);
+    }
+
+    public async Task SaveAsync()
+    {
+        if (Schema.Handle is not null)
+        {
+            var writer = await Schema.Handle
+                .CreateWritableAsync(new() { KeepExistingData = false });
+
+            await writer.WriteAsync(JsonSerializer.Serialize(Schema));
+
+            await writer.CloseAsync();
+        }
     }
 }

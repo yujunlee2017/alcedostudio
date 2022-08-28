@@ -2,8 +2,32 @@
 
 public class SchemaHandler
 {
+    private const string EXTENSION = ".schema";
+    private const string PROPETIES = "Properties";
+    private const string SCHEMADIR = "Schemas";
+
+    private readonly Workspace _workspace;
+
+    public SchemaHandler(Workspace workspace)
+    {
+        _workspace = workspace;
+    }
+
     public async Task SaveAsync(FileSchema schema)
     {
+        if (schema.Handle is null && _workspace.DirectoryHandle is not null)
+        {
+            var schemaDirectory = await this.GetSchemaDirectoryAsync(_workspace.DirectoryHandle);
+
+            if (schemaDirectory is not null)
+            {
+                var file = await schemaDirectory.GetFileHandleAsync(
+                    $"{schema.Name}{EXTENSION}", new() { Create = true });
+
+                schema.Handle = file;
+            }
+        }
+
         if (schema.Handle is not null)
         {
             var writer = await schema.Handle
@@ -15,36 +39,30 @@ public class SchemaHandler
         }
     }
 
-    public async Task SaveAsync(
-        FileSystemDirectoryHandle directory, FileSchema schema)
+    public async Task DeleteAsync(FileSchema schema)
     {
-        if (schema.Handle is null)
+        if (_workspace.DirectoryHandle is not null)
         {
-            var schemaDirectory = await this.GetDirectoryAsync(directory);
+            var schemaDirectory = await this.GetSchemaDirectoryAsync(_workspace.DirectoryHandle);
 
             if (schemaDirectory is not null)
             {
-                var file = await schemaDirectory.GetFileHandleAsync(
-                    $"{schema.Name}.schema", new() { Create = true });
-
-                schema.Handle = file;
+                await schemaDirectory.RemoveEntryAsync($"{schema.Name}{EXTENSION}");
             }
         }
-
-        await this.SaveAsync(schema);
     }
 
     public async Task<FileSchema[]> GetSchemasAsync(FileSystemDirectoryHandle directory)
     {
         var schemas = new List<FileSchema>();
 
-        var schemaDirectory = await this.GetDirectoryAsync(directory);
+        var schemaDirectory = await this.GetSchemaDirectoryAsync(directory);
 
         if (schemaDirectory is not null)
         {
             foreach (var handle in await schemaDirectory.ValuesAsync())
             {
-                if (handle.Kind is FileSystemHandleKind.File && handle.Name.EndsWith(".schema"))
+                if (handle.Kind is FileSystemHandleKind.File && handle.Name.EndsWith(EXTENSION))
                 {
                     var fileHandle = await schemaDirectory.GetFileHandleAsync(handle.Name);
 
@@ -67,22 +85,19 @@ public class SchemaHandler
         return schemas.ToArray();
     }
 
-    private async Task<FileSystemDirectoryHandle?> GetDirectoryAsync(FileSystemDirectoryHandle directory)
+    private async Task<FileSystemDirectoryHandle?> GetSchemaDirectoryAsync(FileSystemDirectoryHandle directory)
     {
-        var fileSystems = await directory.ValuesAsync();
+        var handler = new SolutionHandler();
 
-        var projectDirectory = fileSystems
-            .FirstOrDefault(x => x.Kind is FileSystemHandleKind.Directory);
+        var projectDirectory = await handler.GetProjectDirectoryAsync(directory);
 
         if (projectDirectory is not null)
         {
-            var projectHandle = await directory.GetDirectoryHandleAsync(projectDirectory.Name);
-
-            var propertiesHandle = await projectHandle
-                .GetDirectoryHandleAsync("Properties", new() { Create = true });
+            var propertiesHandle = await projectDirectory
+                .GetDirectoryHandleAsync(PROPETIES, new() { Create = true });
 
             var schemasHandle = await propertiesHandle
-                .GetDirectoryHandleAsync("Schemas", new() { Create = true });
+                .GetDirectoryHandleAsync(SCHEMADIR, new() { Create = true });
 
             return schemasHandle;
         }
