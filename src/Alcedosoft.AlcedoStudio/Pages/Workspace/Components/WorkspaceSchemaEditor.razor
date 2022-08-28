@@ -1,9 +1,5 @@
-﻿@page "/model"
-
-<PageTitle>Model</PageTitle>
-
-<MudDataGrid T="FileSchemaItem"
-             Items="@_schema.Items"
+﻿<MudDataGrid T="FileSchemaItem"
+             Items="@Schema.Items"
              Dense="true"
              ReadOnly="false"
              SortMode="SortMode.None"
@@ -31,7 +27,7 @@
         <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Description)" />
         <Column T="FileSchemaItem" IsEditable="false">
             <HeaderTemplate>
-                <MudIconButton Icon="@Icons.Filled.Add" Color="Color.Success" OnClick="CreateItem" />
+                <MudIconButton Icon="@Icons.Filled.Add" Color="Color.Tertiary" OnClick="CreateItem" />
             </HeaderTemplate>
             <CellTemplate>
                 <MudIconButton Icon="@Icons.Filled.Delete" Color="Color.Error" OnClick="x => DeleteItem(context.Item)" />
@@ -41,49 +37,15 @@
 </MudDataGrid>
 
 @code {
-    private FileSchema _schema = new();
+    private readonly SchemaHandler _handler = new();
 
-    [Inject] private ISnackbar Snackbar { get; set; } = null!;
-    [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    [Inject] public IDialogService DialogService { get; set; } = null!;
+    [Parameter] public FileSchema Schema { get; set; } = null!;
 
-    protected override void OnInitialized()
+    public void CreateItem()
     {
-        var text = @"
-{
-  ""Name"": ""Book"",
-  ""DisplayName"": ""图书"",
-  ""Description"": ""图书信息"",
-  ""Items"": [
-    {
-      ""Name"": ""Id"",
-      ""Type"": ""int"",
-      ""DisplayName"": ""编号"",
-      ""Description"": ""图书编号""
-    },
-    {
-      ""Name"": ""Title"",
-      ""Type"": ""string"",
-      ""DisplayName"": ""名称"",
-      ""Description"": ""图书名称""
-    },
-    {
-      ""Name"": ""Description"",
-      ""Type"": ""string"",
-      ""DisplayName"": ""简介"",
-      ""Description"": ""图书简介""
-    }
-  ]
-}
-";
-
-        _schema = JsonSerializer.Deserialize<FileSchema>(text) ?? new();
-
-        base.OnInitialized();
-    }
-
-    void CreateItem()
-    {
-        _schema.Items.Add(new()
+        this.Schema.Items.Add(new()
             {
                 Name = "Field1",
                 Type = "string",
@@ -94,7 +56,7 @@
         this.Snackbar.Add("Item Created", Severity.Success);
     }
 
-    async Task DeleteItem(FileSchemaItem item)
+    public async Task DeleteItem(FileSchemaItem item)
     {
         bool? result = await DialogService.ShowMessageBox(
             "Warning",
@@ -104,25 +66,25 @@
 
         if (result is true)
         {
-            _schema.Items.Remove(item);
+            Schema.Items.Remove(item);
 
             this.Snackbar.Add("Item Deleted", Severity.Success);
         }
     }
 
-    void OnTypeChanged(CellContext<FileSchemaItem> context, string type)
+    public async Task OnTypeChanged(CellContext<FileSchemaItem> context, string type)
     {
         context.Item.Type = type;
 
         context.Actions.CancelEditingItem();
 
-        this.OnItemChanged();
+        await this.OnItemChanged();
     }
 
-    void OnItemChanged()
+    public async Task OnItemChanged()
     {
         this.Snackbar.Add("Item Updated", Severity.Success);
 
-        Console.WriteLine(JsonSerializer.Serialize(_schema));
+        await _handler.SaveAsync(this.Schema);
     }
 }

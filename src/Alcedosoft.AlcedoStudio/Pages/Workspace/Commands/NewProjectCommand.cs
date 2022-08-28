@@ -1,21 +1,61 @@
 ﻿namespace Alcedosoft.AlcedoStudio;
 
-public class NewProjectHandler
+public class NewProjectCommand : Command
 {
     private const string NAME = "[NAME]";
     private const string REPLACE = "__REPLACE__";
 
-    private readonly HttpClient _client;
+    private readonly Workspace _workspace;
+    private readonly OpenProjectCommand _openCommand;
 
-    public NewProjectHandler(HttpClient client)
+    public NewProjectCommand(Workspace workspace)
     {
-        _client = client;
+        _workspace = workspace;
+        _openCommand = new OpenProjectCommand(workspace);
     }
 
-    public async Task ExecuteAsync(
-        string projectName, string templatePath, FileSystemDirectoryHandle directory)
+    public async override void Execute(object? parameter)
     {
-        var templateStream = await _client.GetStreamAsync(templatePath);
+        var dialog = _workspace.DialogService.Show<NewProjectDialog>("Create New Project");
+
+        if (await dialog.Result is { Cancelled: false } result && result.Data is NewProjectViewModel viewModel)
+        {
+            var state = await viewModel.DirectoryHandle
+                .RequestPermission(new() { Mode = FileSystemPermissionMode.ReadWrite });
+
+            if (state is PermissionState.Granted)
+            {
+                try
+                {
+                    _workspace.IsLoading = true;
+
+                    _workspace.DirectoryHandle = viewModel.DirectoryHandle;
+
+                    _workspace.StateHasChanged();
+
+                    await this.ExecuteAsync(viewModel);
+
+                    await _openCommand.LoadDirectory(viewModel.DirectoryHandle);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                finally
+                {
+                    _workspace.IsLoading = false;
+
+                    _workspace.StateHasChanged();
+                }
+            }
+        }
+
+        base.Execute(parameter);
+    }
+
+    public async Task ExecuteAsync(NewProjectViewModel viewModel)
+    {
+        var templateStream = await _workspace.HttpClient.GetStreamAsync(viewModel.TemplatePath);
 
         var templateArchive = new ZipArchive(templateStream, ZipArchiveMode.Read, true);
 
@@ -42,8 +82,8 @@ public class NewProjectHandler
                 continue;
             }
 
-            string name = entry.Name.Replace(NAME, projectName);
-            string fullName = entry.FullName.Replace(NAME, projectName);
+            string name = entry.Name.Replace(NAME, viewModel.ProjectName);
+            string fullName = entry.FullName.Replace(NAME, viewModel.ProjectName);
 
             bool isFile = !String.IsNullOrEmpty(name);
 
@@ -53,7 +93,7 @@ public class NewProjectHandler
 
             string parentPath = String.Empty;
 
-            var parentDirectory = directory;
+            var parentDirectory = viewModel.DirectoryHandle;
 
             foreach (string directoryName in directoryNames)
             {
@@ -83,7 +123,7 @@ public class NewProjectHandler
 
                     string content = await reader.ReadToEndAsync();
 
-                    content = content.Replace(NAME, projectName);
+                    content = content.Replace(NAME, viewModel.ProjectName);
 
                     await writer.WriteAsync(content);
                 }

@@ -1,0 +1,125 @@
+﻿@page "/workspace"
+
+@if (IsLoading)
+{
+    <WorkspaceLoading />
+}
+else if (FileSystemItems.Count <= 0)
+{
+    <WorkspaceOperation NewProjectCommand="NewProjectCommand"
+                    OpenProjectCommand="OpenProjectCommand"
+                    CloneProjectCommand="CloneProjectCommand" />
+}
+else
+{
+    <MudGrid>
+        <MudItem lg="4">
+            <MudPaper Elevation="2">
+                <MudToolBar>
+                    <MudIconButton Command="NewSchemaCommand"
+                               Icon="@Icons.Filled.Add"
+                               Color="Color.Tertiary"
+                               Title="New Schema" />
+                    <MudIconButton Command="GenerateCodeCommand"
+                               Icon="@Icons.Filled.ViewInAr"
+                               Color="Color.Secondary"
+                               Title="Generate Code" />
+                    <MudIconButton Command="GenerateCodeCommand"
+                               Icon="@Icons.Custom.Brands.MicrosoftVisualStudio"
+                               Color="Color.Primary"
+                               Title="Open In VSCode"
+                               Href="vscode://"
+                               Target="_blank"/>
+
+                    <MudSpacer />
+
+                    <MudToggleIconButton @bind-Toggled="@IsCode"
+                                     Icon="@Icons.Filled.Code"
+                                     Title="Toggle Code View"
+                                     Color="Color.Success"
+                                     ToggledIcon="@Icons.Filled.CodeOff"
+                                     ToggledTitle="Toggle Schema View"
+                                     ToggledColor="Color.Inherit" />
+                </MudToolBar>
+
+                <MudDivider />
+
+                @if (IsCode)
+                {
+                    <MudTreeView Items="@FileSystemItems"
+                         Hover="true"
+                         ExpandOnClick="true"
+                         @bind-SelectedValue="this.SelectedItem">
+                        <ItemTemplate>
+                            <MudTreeViewItem Value="@context"
+                                     Items="@context.Items"
+                                     Icon="@context.Icon"
+                                     IconColor="@context.IconColor"
+                                     Text="@context.Name"
+                                     Command="ClickItemCommand"
+                                     @bind-Expanded="@context.IsExpanded">
+                            </MudTreeViewItem>
+                        </ItemTemplate>
+                    </MudTreeView>
+                }
+                else
+                {
+                    <MudTreeView Items="@Schemas"
+                         Hover="true"
+                         @bind-SelectedValue="SelectedSchema">
+                        <ItemTemplate>
+                            <MudTreeViewItem Value="@context"
+                                     Icon="@context.Icon"
+                                     IconColor="@context.IconColor"
+                                     Text="@context.Name"
+                                     @bind-Expanded="@context.IsExpanded">
+                            </MudTreeViewItem>
+                        </ItemTemplate>
+                    </MudTreeView>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <MudItem lg="8">
+            @if (this.IsCode && SelectedItem is not null)
+            {
+                <WorkspacePreviewEditor @ref="ProviewEditor" Item="SelectedItem" />
+            }
+
+            @if (!this.IsCode && SelectedSchema is not null)
+            {
+                <WorkspaceSchemaEditor Schema="SelectedSchema" />
+            }
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    public bool IsCode { get; set; }
+    public bool IsLoading { get; set; }
+
+    public ICommand NewProjectCommand => new NewProjectCommand(this);
+    public ICommand OpenProjectCommand => new OpenProjectCommand(this);
+    public ICommand CloneProjectCommand => new CloneProjectCommand(this);
+
+    public ICommand ClickItemCommand => new ClickItemCommand(this);
+    public ICommand NewSchemaCommand => new NewSchemaCommand(this);
+    public ICommand GenerateCodeCommand => new GenerateCodeCommand(this);
+
+    public FileSchema? SelectedSchema { get; set; }
+    public FileSystemItem? SelectedItem { get; set; }
+    public WorkspacePreviewEditor? ProviewEditor { get; set; }
+
+    public HashSet<FileSchema> Schemas { get; } = new();
+    public HashSet<FileSystemItem> FileSystemItems { get; } = new();
+    public FileSystemDirectoryHandle? DirectoryHandle { get; set; }
+
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public IDialogService DialogService { get; set; } = null!;
+    [Inject] public FileSystemAccessService FileSystemService { get; set; } = null!;
+
+    public new void StateHasChanged()
+    {
+        base.StateHasChanged();
+    }
+}

@@ -2,11 +2,11 @@
   {
     "name": "Web API Project",
     "path": "/webapi.template",
-    "isenabled": true
+    "disabled": false
   },
   {
     "name": "Abp Project(Coming Soon)",
     "path": "/abp.template",
-    "isenabled": false
+    "disabled": true
   }
 ]

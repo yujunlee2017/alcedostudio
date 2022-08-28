@@ -1,0 +1,49 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="NewProjectForm">
+            <MudTextField @bind-Value="@Schema.Name"
+                          Label="Name"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+            <MudTextField @bind-Value="@Schema.DisplayName"
+                          Label="DisplayName"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+            <MudTextField @bind-Value="@Schema.Description"
+                          Label="Description"
+                          Required="true"
+                          Clearable="true"
+                          Immediate="true" />
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Instance.Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Create</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter] MudDialogInstance Instance { get; set; } = null!;
+
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+
+    public MudForm? NewProjectForm { get; set; }
+    public FileSchema Schema { get; set; } = new();
+
+    public async void Submit()
+    {
+        if (this.NewProjectForm is not null)
+        {
+            await this.NewProjectForm.Validate();
+
+            if (this.NewProjectForm.IsValid)
+            {
+                this.Instance.Close(Schema);
+            }
+        }
+    }
+}
