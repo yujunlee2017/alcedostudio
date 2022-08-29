@@ -4,11 +4,13 @@ public partial class GenerateCodeCommand : Command
 {
     private readonly Workspace _workspace;
     private readonly SolutionHandler _handler;
+    private readonly OpenProjectCommand _openCommand;
 
     public GenerateCodeCommand(Workspace workspace)
     {
         _workspace = workspace;
         _handler = new(workspace);
+        _openCommand = new OpenProjectCommand(workspace);
     }
 
     public override async void Execute(object? parameter)
@@ -49,7 +51,13 @@ public partial class GenerateCodeCommand : Command
                 string contollerContent = this.GenerateController(projectDirectory.Name, schema);
                 await controllerWriter.WriteAsync(contollerContent);
                 await controllerWriter.CloseAsync();
+            }
 
+            _workspace.Snackbar.Add("Code Generated", Severity.Success);
+
+            if (_workspace.DirectoryHandle is not null)
+            {
+                await _openCommand.LoadDirectory(_workspace.DirectoryHandle);
             }
         }
 
