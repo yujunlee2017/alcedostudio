@@ -1,6 +1,6 @@
 ﻿namespace Alcedosoft.AlcedoStudio;
 
-public class GenerateCodeCommand : Command
+public partial class GenerateCodeCommand : Command
 {
     private readonly Workspace _workspace;
     private readonly SolutionHandler _handler;
@@ -19,20 +19,36 @@ public class GenerateCodeCommand : Command
         {
             foreach (var schema in _workspace.Schemas)
             {
-                string name = schema.Name;
-                string namePlural = $"{name}s";
-
-                string entityName = $"{name}.cs";
-                string dataContext = $"{name}Context.cs";
-                string controller = $"{name}Controller.cs";
+                string entityName = $"{schema.Name}.cs";
+                string contextName = $"{schema.Name}Context.cs";
+                string controllerName = $"{schema.Name}Controller.cs";
 
                 var currentDirectory = await projectDirectory
-                    .GetDirectoryHandleAsync(namePlural, new() { Create = true });
+                    .GetDirectoryHandleAsync($"{schema.Name}s", new() { Create = true });
 
-                var entityHandle = await currentDirectory.GetFileHandleAsync(entityName, new() { Create = true });
-                var dataContextHandle = await currentDirectory.GetFileHandleAsync(dataContext, new() { Create = true });
-                var controllerHandle = await currentDirectory.GetFileHandleAsync(controller, new() { Create = true });
+                var entityHandle = await currentDirectory
+                    .GetFileHandleAsync(entityName, new() { Create = true });
+                var entityWriter = await entityHandle
+                    .CreateWritableAsync(new() { KeepExistingData = false });
+                string entityContent = this.GenerateEntity(projectDirectory.Name, schema);
+                await entityWriter.WriteAsync(entityContent);
+                await entityWriter.CloseAsync();
 
+                var contextHandle = await currentDirectory
+                    .GetFileHandleAsync(contextName, new() { Create = true });
+                var contextWriter = await contextHandle
+                    .CreateWritableAsync(new() { KeepExistingData = false });
+                string contextContent = this.GenerateContext(projectDirectory.Name, schema);
+                await contextWriter.WriteAsync(contextContent);
+                await contextWriter.CloseAsync();
+
+                var controllerHandle = await currentDirectory
+                    .GetFileHandleAsync(controllerName, new() { Create = true });
+                var controllerWriter = await controllerHandle
+                    .CreateWritableAsync(new() { KeepExistingData = false });
+                string contollerContent = this.GenerateController(projectDirectory.Name, schema);
+                await controllerWriter.WriteAsync(contollerContent);
+                await controllerWriter.CloseAsync();
 
             }
         }
