@@ -13,13 +13,16 @@ public class RemoveSchemaCommand : Command
 
     public override async void Execute(object? parameter)
     {
-        bool? result = await _workspace.DialogService.ShowMessageBox(
-            "Warning",
-            "Deleting can not be undone!",
-            yesText: "Delete",
-            cancelText: "Cancel");
+        var parameters = new DialogParameters
+        {
+            { "Message", "Do you really want to delete the schema? This process cannot be undone." },
+            { "ButtonText", "Delete" },
+            { "ButtonColor", Color.Error }
+        };
 
-        if (result is true && _workspace.SelectedSchema is not null)
+        var dialog = _workspace.DialogService.Show<ConfirmDialog>("Delete", parameters);
+
+        if (await dialog.Result is { Data: true } && _workspace.SelectedSchema is not null)
         {
             _workspace.Schemas.Remove(_workspace.SelectedSchema);
 
