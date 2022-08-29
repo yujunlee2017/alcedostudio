@@ -7,17 +7,19 @@ public class SchemaHandler
     private const string SCHEMADIR = "Schemas";
 
     private readonly Workspace _workspace;
+    private readonly SolutionHandler _handler;
 
     public SchemaHandler(Workspace workspace)
     {
         _workspace = workspace;
+        _handler = new(workspace);
     }
 
     public async Task SaveAsync(FileSchema schema)
     {
         if (schema.Handle is null && _workspace.DirectoryHandle is not null)
         {
-            var schemaDirectory = await this.GetSchemaDirectoryAsync(_workspace.DirectoryHandle);
+            var schemaDirectory = await this.GetSchemaDirectoryAsync();
 
             if (schemaDirectory is not null)
             {
@@ -43,7 +45,7 @@ public class SchemaHandler
     {
         if (_workspace.DirectoryHandle is not null)
         {
-            var schemaDirectory = await this.GetSchemaDirectoryAsync(_workspace.DirectoryHandle);
+            var schemaDirectory = await this.GetSchemaDirectoryAsync();
 
             if (schemaDirectory is not null)
             {
@@ -52,11 +54,11 @@ public class SchemaHandler
         }
     }
 
-    public async Task<FileSchema[]> GetSchemasAsync(FileSystemDirectoryHandle directory)
+    public async Task<FileSchema[]> GetSchemasAsync()
     {
         var schemas = new List<FileSchema>();
 
-        var schemaDirectory = await this.GetSchemaDirectoryAsync(directory);
+        var schemaDirectory = await this.GetSchemaDirectoryAsync();
 
         if (schemaDirectory is not null)
         {
@@ -85,11 +87,9 @@ public class SchemaHandler
         return schemas.ToArray();
     }
 
-    private async Task<FileSystemDirectoryHandle?> GetSchemaDirectoryAsync(FileSystemDirectoryHandle directory)
+    private async Task<FileSystemDirectoryHandle?> GetSchemaDirectoryAsync()
     {
-        var handler = new SolutionHandler();
-
-        var projectDirectory = await handler.GetProjectDirectoryAsync(directory);
+        var projectDirectory = await _handler.GetProjectDirectoryAsync();
 
         if (projectDirectory is not null)
         {

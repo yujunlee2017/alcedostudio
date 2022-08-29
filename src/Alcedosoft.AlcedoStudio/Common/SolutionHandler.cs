@@ -2,21 +2,31 @@
 
 public class SolutionHandler
 {
-    public async Task<FileSystemDirectoryHandle?> GetProjectDirectoryAsync(FileSystemDirectoryHandle directory)
+    private readonly Workspace _workspace;
+
+    public SolutionHandler(Workspace workspace)
     {
-        var fileSystems = await directory.ValuesAsync();
+        _workspace = workspace;
+    }
 
-        var solutionFile = fileSystems.FirstOrDefault(x => x.Name.EndsWith(".sln"));
-
-        if (solutionFile is not null)
+    public async Task<FileSystemDirectoryHandle?> GetProjectDirectoryAsync()
+    {
+        if (_workspace.DirectoryHandle is FileSystemDirectoryHandle directory)
         {
-            string projectName = Path.GetFileNameWithoutExtension(solutionFile.Name);
+            var fileSystems = await directory.ValuesAsync();
 
-            if (fileSystems.Any(x => x is { Kind: FileSystemHandleKind.Directory } && x.Name == projectName))
+            var solutionFile = fileSystems.FirstOrDefault(x => x.Name.EndsWith(".sln"));
+
+            if (solutionFile is not null)
             {
-                var projectDirectory = await directory.GetDirectoryHandleAsync(projectName);
+                string projectName = Path.GetFileNameWithoutExtension(solutionFile.Name);
 
-                return projectDirectory;
+                if (fileSystems.Any(x => x is { Kind: FileSystemHandleKind.Directory } && x.Name == projectName))
+                {
+                    var projectDirectory = await directory.GetDirectoryHandleAsync(projectName);
+
+                    return projectDirectory;
+                }
             }
         }
 

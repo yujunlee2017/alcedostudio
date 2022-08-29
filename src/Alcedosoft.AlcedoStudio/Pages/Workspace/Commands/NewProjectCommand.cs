@@ -36,6 +36,8 @@ public class NewProjectCommand : Command
                     await this.ExecuteAsync(viewModel);
 
                     await _openCommand.LoadDirectory(viewModel.DirectoryHandle);
+
+                    _workspace.Snackbar.Add("Project Created", Severity.Success);
                 }
                 catch (Exception ex)
                 {

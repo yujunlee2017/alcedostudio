@@ -3,12 +3,14 @@
 public class OpenProjectCommand : Command
 {
     private readonly Workspace _workspace;
-    private readonly SchemaHandler _handler;
+    private readonly SchemaHandler _schemaHandler;
+    private readonly SolutionHandler _solutionHandler;
 
     public OpenProjectCommand(Workspace workspace)
     {
         _workspace = workspace;
-        _handler = new(workspace);
+        _schemaHandler = new(workspace);
+        _solutionHandler = new(workspace);
     }
 
     public async override void Execute(object? parameter)
@@ -18,51 +20,57 @@ public class OpenProjectCommand : Command
             StartIn = WellKnownDirectory.Desktop,
         };
 
-        var directory = await _workspace.FileSystemService.ShowDirectoryPickerAsync(options);
+        _workspace.DirectoryHandle = await _workspace.FileSystemService.ShowDirectoryPickerAsync(options);
 
-        var state = await directory.RequestPermission(
-            new() { Mode = FileSystemPermissionMode.ReadWrite });
+        var projectDirectory = await _solutionHandler.GetProjectDirectoryAsync();
 
-        if (state is PermissionState.Granted)
+        if (projectDirectory is not null)
         {
-            try
+            var state = await _workspace.DirectoryHandle
+                .RequestPermission(new() { Mode = FileSystemPermissionMode.ReadWrite });
+
+            if (state is PermissionState.Granted)
             {
-                _workspace.IsLoading = true;
+                try
+                {
+                    _workspace.IsLoading = true;
 
-                _workspace.DirectoryHandle = directory;
+                    _workspace.StateHasChanged();
 
-                _workspace.StateHasChanged();
+                    foreach (var schema in await _schemaHandler.GetSchemasAsync())
+                    {
+                        _workspace.Schemas.Add(schema);
+                    }
 
-                await ResolveSchema(directory, _workspace.Schemas);
+                    await ResolveSolution(_workspace.DirectoryHandle, _workspace.FileSystemItems);
 
-                await ResolveSolution(directory, _workspace.FileSystemItems);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-            finally
-            {
-                _workspace.IsLoading = false;
+                    _workspace.Snackbar.Add("Project Opened", Severity.Success);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                finally
+                {
+                    _workspace.IsLoading = false;
 
-                _workspace.StateHasChanged();
+                    _workspace.StateHasChanged();
+                }
             }
         }
     }
 
     public async Task LoadDirectory(FileSystemDirectoryHandle directory)
     {
-        await ResolveSchema(directory, _workspace.Schemas);
+        _workspace.Schemas.Clear();
+        _workspace.FileSystemItems.Clear();
+
+        foreach (var schema in await _schemaHandler.GetSchemasAsync())
+        {
+            _workspace.Schemas.Add(schema);
+        }
 
         await ResolveSolution(directory, _workspace.FileSystemItems);
-    }
-
-    private async Task ResolveSchema(FileSystemDirectoryHandle directory, HashSet<FileSchema> schemas)
-    {
-        foreach (var schema in await _handler.GetSchemasAsync(directory))
-        {
-            schemas.Add(schema);
-        }
     }
 
     private async Task ResolveSolution(FileSystemDirectoryHandle directory, HashSet<FileSystemItem> items)
