@@ -16,7 +16,7 @@ public class [PROJECTSUBNAME]EntityFrameworkCoreModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        [PROJECTSUBNAME]EfCoreEntityExtensionMappings.Configure();
+        [PROJECTSUBNAME]EFCoreEntityExtensionMappings.Configure();
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)

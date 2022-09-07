@@ -21,9 +21,9 @@ public partial class GenerateCodeCommand : Command
         {
             foreach (var schema in _workspace.Schemas)
             {
-                string entityName = $"{schema.Name}.cs";
-                string contextName = $"{schema.Name}Context.cs";
-                string controllerName = $"{schema.Name}Controller.cs";
+                var entityName = $"{schema.Name}.cs";
+                var contextName = $"{schema.Name}Context.cs";
+                var controllerName = $"{schema.Name}Controller.cs";
 
                 var currentDirectory = await projectDirectory
                     .GetDirectoryHandleAsync($"{schema.Name}s", new() { Create = true });
@@ -32,7 +32,7 @@ public partial class GenerateCodeCommand : Command
                     .GetFileHandleAsync(entityName, new() { Create = true });
                 var entityWriter = await entityHandle
                     .CreateWritableAsync(new() { KeepExistingData = false });
-                string entityContent = this.GenerateEntity(projectDirectory.Name, schema);
+                var entityContent = GenerateEntity(projectDirectory.Name, schema);
                 await entityWriter.WriteAsync(entityContent);
                 await entityWriter.CloseAsync();
 
@@ -40,7 +40,7 @@ public partial class GenerateCodeCommand : Command
                     .GetFileHandleAsync(contextName, new() { Create = true });
                 var contextWriter = await contextHandle
                     .CreateWritableAsync(new() { KeepExistingData = false });
-                string contextContent = this.GenerateContext(projectDirectory.Name, schema);
+                var contextContent = GenerateContext(projectDirectory.Name, schema);
                 await contextWriter.WriteAsync(contextContent);
                 await contextWriter.CloseAsync();
 
@@ -48,12 +48,12 @@ public partial class GenerateCodeCommand : Command
                     .GetFileHandleAsync(controllerName, new() { Create = true });
                 var controllerWriter = await controllerHandle
                     .CreateWritableAsync(new() { KeepExistingData = false });
-                string contollerContent = this.GenerateController(projectDirectory.Name, schema);
+                var contollerContent = GenerateController(projectDirectory.Name, schema);
                 await controllerWriter.WriteAsync(contollerContent);
                 await controllerWriter.CloseAsync();
             }
 
-            _workspace.Snackbar.Add("Code Generated", Severity.Success);
+            _ = _workspace.Snackbar.Add("Code Generated", Severity.Success);
 
             if (_workspace.DirectoryHandle is not null)
             {

@@ -21,6 +21,8 @@ src/[PROJECTNAME].Blazor/Menus/[PROJECTSUBNAME]Menus.cs
 src/[PROJECTNAME].Blazor/Pages/Index.razor
 src/[PROJECTNAME].Blazor/Pages/Index.razor.cs
 src/[PROJECTNAME].Blazor/Properties/launchSettings.json
+src/[PROJECTNAME].Blazor/wwwroot/appsettings.json
+src/[PROJECTNAME].Blazor/wwwroot/index.html
 src/[PROJECTNAME].Blazor/_Imports.razor
 src/[PROJECTNAME].Blazor/[PROJECTNAME].Blazor.csproj
 src/[PROJECTNAME].Blazor/[PROJECTSUBNAME]BlazorAutoMapperProfile.cs
@@ -50,8 +52,8 @@ src/[PROJECTNAME].Domain/[PROJECTSUBNAME]DataSeedContributor.cs
 src/[PROJECTNAME].Domain/[PROJECTSUBNAME]DomainModule.cs
 
 src/[PROJECTNAME].Domain.Shared
-src/[PROJECTNAME].Domain.Shared/[PROJECTSUBNAME]
-src/[PROJECTNAME].Domain.Shared/[PROJECTSUBNAME]/[PROJECTSUBNAME]Resource.cs
+src/[PROJECTNAME].Domain.Shared/Localization/[PROJECTSUBNAME]
+src/[PROJECTNAME].Domain.Shared/Localization/[PROJECTSUBNAME]Resource.cs
 src/[PROJECTNAME].Domain.Shared/MultiTenancy/MultiTenancyConsts.cs
 src/[PROJECTNAME].Domain.Shared/[PROJECTNAME].Domain.Shared.csproj
 src/[PROJECTNAME].Domain.Shared/[PROJECTSUBNAME]DomainErrorCodes.cs

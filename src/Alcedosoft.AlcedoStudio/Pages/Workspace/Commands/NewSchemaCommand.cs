@@ -24,13 +24,13 @@ public class NewSchemaCommand : Command
         {
             await _handler.SaveAsync(schema);
 
-            _workspace.Schemas.Add(schema);
+            _ = _workspace.Schemas.Add(schema);
 
             _workspace.SelectedSchema = schema;
 
             _workspace.StateHasChanged();
 
-            _workspace.Snackbar.Add("Schema Created", Severity.Success);
+            _ = _workspace.Snackbar.Add("Schema Created", Severity.Success);
         }
 
         base.Execute(parameter);

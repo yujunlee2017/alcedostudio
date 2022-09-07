@@ -28,7 +28,7 @@ public class ClickItemCommand : Command
 
             await _worksapce.ProviewEditor.SetValue(content);
         }
-        else if (parameter is FileSystemFolderItem folder)
+        else if (parameter is FileSystemFolderItem)
         {
 
         }

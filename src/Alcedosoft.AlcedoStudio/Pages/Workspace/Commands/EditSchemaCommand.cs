@@ -27,7 +27,7 @@ public class EditSchemaCommand : Command
 
                 _workspace.StateHasChanged();
 
-                _workspace.Snackbar.Add("Schema Updated", Severity.Success);
+                _ = _workspace.Snackbar.Add("Schema Updated", Severity.Success);
             }
         }
 

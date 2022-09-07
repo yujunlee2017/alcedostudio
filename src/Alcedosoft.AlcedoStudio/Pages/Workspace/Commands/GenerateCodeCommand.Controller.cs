@@ -4,8 +4,8 @@ public partial class GenerateCodeCommand : Command
 {
     public string GenerateController(string projectName, FileSchema schema)
     {
-        string name = schema.Name;
-        string nameLower = schema.Name.ToLower();
+        var name = schema.Name;
+        var nameLower = schema.Name.ToLower();
 
         return $@"namespace {projectName};
 

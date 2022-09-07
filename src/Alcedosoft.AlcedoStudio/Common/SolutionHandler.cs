@@ -19,7 +19,7 @@ public class SolutionHandler
 
             if (solutionFile is not null)
             {
-                string projectName = Path.GetFileNameWithoutExtension(solutionFile.Name);
+                var projectName = Path.GetFileNameWithoutExtension(solutionFile.Name);
 
                 if (fileSystems.Any(x => x is { Kind: FileSystemHandleKind.Directory } && x.Name == projectName))
                 {

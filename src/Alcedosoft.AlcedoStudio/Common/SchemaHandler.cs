@@ -2,24 +2,22 @@
 
 public class SchemaHandler
 {
-    private const string EXTENSION = ".schema";
-    private const string PROPETIES = "Properties";
-    private const string SCHEMADIR = "Schemas";
+    public const string EXTENSION = ".schema";
+    public const string SCHEMADIR = ".alcedostudio";
 
     private readonly Workspace _workspace;
-    private readonly SolutionHandler _handler;
 
     public SchemaHandler(Workspace workspace)
     {
         _workspace = workspace;
-        _handler = new(workspace);
     }
 
     public async Task SaveAsync(FileSchema schema)
     {
         if (schema.Handle is null && _workspace.DirectoryHandle is not null)
         {
-            var schemaDirectory = await this.GetSchemaDirectoryAsync();
+            var schemaDirectory = await _workspace.DirectoryHandle
+                .GetDirectoryHandleAsync(SCHEMADIR, new() { Create = true });
 
             if (schemaDirectory is not null)
             {
@@ -45,7 +43,8 @@ public class SchemaHandler
     {
         if (_workspace.DirectoryHandle is not null)
         {
-            var schemaDirectory = await this.GetSchemaDirectoryAsync();
+            var schemaDirectory = await _workspace.DirectoryHandle
+                .GetDirectoryHandleAsync(SCHEMADIR, new() { Create = true });
 
             if (schemaDirectory is not null)
             {
@@ -58,10 +57,11 @@ public class SchemaHandler
     {
         var schemas = new List<FileSchema>();
 
-        var schemaDirectory = await this.GetSchemaDirectoryAsync();
-
-        if (schemaDirectory is not null)
+        if (_workspace.DirectoryHandle is not null)
         {
+            var schemaDirectory = await _workspace.DirectoryHandle
+                .GetDirectoryHandleAsync(SCHEMADIR, new() { Create = true });
+
             foreach (var handle in await schemaDirectory.ValuesAsync())
             {
                 if (handle.Kind is FileSystemHandleKind.File && handle.Name.EndsWith(EXTENSION))
@@ -70,7 +70,7 @@ public class SchemaHandler
 
                     var reader = await fileHandle.GetFileAsync();
 
-                    string schemaText = await reader.TextAsync();
+                    var schemaText = await reader.TextAsync();
 
                     var schema = JsonSerializer.Deserialize<FileSchema>(schemaText);
 
@@ -85,23 +85,5 @@ public class SchemaHandler
         }
 
         return schemas.ToArray();
-    }
-
-    private async Task<FileSystemDirectoryHandle?> GetSchemaDirectoryAsync()
-    {
-        var projectDirectory = await _handler.GetProjectDirectoryAsync();
-
-        if (projectDirectory is not null)
-        {
-            var propertiesHandle = await projectDirectory
-                .GetDirectoryHandleAsync(PROPETIES, new() { Create = true });
-
-            var schemasHandle = await propertiesHandle
-                .GetDirectoryHandleAsync(SCHEMADIR, new() { Create = true });
-
-            return schemasHandle;
-        }
-
-        return null;
     }
 }

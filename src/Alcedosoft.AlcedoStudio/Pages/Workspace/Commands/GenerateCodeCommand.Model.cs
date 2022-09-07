@@ -6,18 +6,18 @@ public partial class GenerateCodeCommand : Command
     {
         var builder = new StringBuilder();
 
-        builder.AppendLine($"namespace {projectName};");
-        builder.AppendLine($"");
-        builder.AppendLine($"public class {schema.Name}");
-        builder.AppendLine($"{{");
+        _ = builder.AppendLine($"namespace {projectName};");
+        _ = builder.AppendLine($"");
+        _ = builder.AppendLine($"public class {schema.Name}");
+        _ = builder.AppendLine($"{{");
 
         foreach (var item in schema.Items)
         {
-            builder.AppendLine($"    [DisplayName(\"{item.DisplayName}\")]");
-            builder.AppendLine($"    public {item.Type} {item.Name} {{ get; set; }}");
+            _ = builder.AppendLine($"    [DisplayName(\"{item.DisplayName}\")]");
+            _ = builder.AppendLine($"    public {item.Type} {item.Name} {{ get; set; }}");
         }
 
-        builder.AppendLine($"}}");
+        _ = builder.AppendLine($"}}");
 
         return builder.ToString();
     }

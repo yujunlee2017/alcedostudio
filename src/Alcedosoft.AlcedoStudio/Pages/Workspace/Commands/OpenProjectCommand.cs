@@ -13,7 +13,7 @@ public class OpenProjectCommand : Command
         _solutionHandler = new(workspace);
     }
 
-    public async override void Execute(object? parameter)
+    public override async void Execute(object? parameter)
     {
         var options = new DirectoryPickerOptionsStartInWellKnownDirectory
         {
@@ -22,40 +22,35 @@ public class OpenProjectCommand : Command
 
         _workspace.DirectoryHandle = await _workspace.FileSystemService.ShowDirectoryPickerAsync(options);
 
-        var projectDirectory = await _solutionHandler.GetProjectDirectoryAsync();
+        var state = await _workspace.DirectoryHandle
+            .RequestPermission(new() { Mode = FileSystemPermissionMode.ReadWrite });
 
-        if (projectDirectory is not null)
+        if (state is PermissionState.Granted)
         {
-            var state = await _workspace.DirectoryHandle
-                .RequestPermission(new() { Mode = FileSystemPermissionMode.ReadWrite });
-
-            if (state is PermissionState.Granted)
+            try
             {
-                try
+                _workspace.IsLoading = true;
+
+                _workspace.StateHasChanged();
+
+                foreach (var schema in await _schemaHandler.GetSchemasAsync())
                 {
-                    _workspace.IsLoading = true;
-
-                    _workspace.StateHasChanged();
-
-                    foreach (var schema in await _schemaHandler.GetSchemasAsync())
-                    {
-                        _workspace.Schemas.Add(schema);
-                    }
-
-                    await ResolveSolution(_workspace.DirectoryHandle, _workspace.FileSystemItems);
-
-                    _workspace.Snackbar.Add("Project Opened", Severity.Success);
+                    _ = _workspace.Schemas.Add(schema);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-                finally
-                {
-                    _workspace.IsLoading = false;
 
-                    _workspace.StateHasChanged();
-                }
+                await ResolveSolution(_workspace.DirectoryHandle, _workspace.FileSystemItems);
+
+                _ = _workspace.Snackbar.Add("Project Opened", Severity.Success);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                _workspace.IsLoading = false;
+
+                _workspace.StateHasChanged();
             }
         }
     }
@@ -67,7 +62,7 @@ public class OpenProjectCommand : Command
 
         foreach (var schema in await _schemaHandler.GetSchemasAsync())
         {
-            _workspace.Schemas.Add(schema);
+            _ = _workspace.Schemas.Add(schema);
         }
 
         await ResolveSolution(directory, _workspace.FileSystemItems);

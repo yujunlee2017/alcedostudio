@@ -6,7 +6,7 @@ public class [PROJECTSUBNAME]DbContextFactory : IDesignTimeDbContextFactory<[PRO
 {
     public [PROJECTSUBNAME]DbContext CreateDbContext(string[] args)
     {
-        [PROJECTSUBNAME]EfCoreEntityExtensionMappings.Configure();
+        [PROJECTSUBNAME]EFCoreEntityExtensionMappings.Configure();
 
         var configuration = BuildConfiguration();
 

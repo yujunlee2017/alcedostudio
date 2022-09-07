@@ -1,12 +1,7 @@
 [
   {
-    "name": "Web API Project",
-    "path": "/webapi.template",
+    "name": "ABP Project(EFCore + Blazor)",
+    "path": "/abp_efcore_blazor.template",
     "disabled": false
-  },
-  {
-    "name": "Abp Project(Coming Soon)",
-    "path": "/abp.template",
-    "disabled": true
   }
 ]

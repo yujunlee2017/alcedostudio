@@ -2,8 +2,9 @@
 
 public class NewProjectCommand : Command
 {
-    private const string NAME = "[NAME]";
-    private const string REPLACE = "__REPLACE__";
+    public const string PROJECTNAME = "[PROJECTNAME]";
+    public const string PROJECTSUBNAME = "[PROJECTSUBNAME]";
+    public const string REPLACE = "__REPLACE__";
 
     private readonly Workspace _workspace;
     private readonly OpenProjectCommand _openCommand;
@@ -14,7 +15,7 @@ public class NewProjectCommand : Command
         _openCommand = new OpenProjectCommand(workspace);
     }
 
-    public async override void Execute(object? parameter)
+    public override async void Execute(object? parameter)
     {
         var dialog = _workspace.DialogService.Show<NewProjectDialog>("Create New Project");
 
@@ -33,11 +34,11 @@ public class NewProjectCommand : Command
 
                     _workspace.StateHasChanged();
 
-                    await this.ExecuteAsync(viewModel);
+                    await ExecuteAsync(viewModel);
 
                     await _openCommand.LoadDirectory(viewModel.DirectoryHandle);
 
-                    _workspace.Snackbar.Add("Project Created", Severity.Success);
+                    _ = _workspace.Snackbar.Add("Project Created", Severity.Success);
                 }
                 catch (Exception ex)
                 {
@@ -73,7 +74,7 @@ public class NewProjectCommand : Command
 
             while (await reader.ReadLineAsync() is string item)
             {
-                replaceFiles.Add(item);
+                _ = replaceFiles.Add(item);
             }
         }
 
@@ -84,22 +85,30 @@ public class NewProjectCommand : Command
                 continue;
             }
 
-            string name = entry.Name.Replace(NAME, viewModel.ProjectName);
-            string fullName = entry.FullName.Replace(NAME, viewModel.ProjectName);
+            var subname = viewModel.ProjectName
+                .Split('.', StringSplitOptions.RemoveEmptyEntries)
+                .LastOrDefault() ?? viewModel.ProjectName;
 
-            bool isFile = !String.IsNullOrEmpty(name);
+            var name = entry.Name
+                .Replace(PROJECTNAME, viewModel.ProjectName)
+                .Replace(PROJECTSUBNAME, subname);
+            var fullName = entry.FullName
+                .Replace(PROJECTNAME, viewModel.ProjectName)
+                .Replace(PROJECTSUBNAME, subname);
 
-            string[] names = fullName.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var isFile = !String.IsNullOrEmpty(name);
 
-            string[] directoryNames = isFile ? names[..^1] : names;
+            var names = fullName.Split("/", StringSplitOptions.RemoveEmptyEntries);
 
-            string parentPath = String.Empty;
+            var directoryNames = isFile ? names[..^1] : names;
+
+            var parentPath = String.Empty;
 
             var parentDirectory = viewModel.DirectoryHandle;
 
-            foreach (string directoryName in directoryNames)
+            foreach (var directoryName in directoryNames)
             {
-                string currentPath = $"{parentPath}{directoryName}/";
+                var currentPath = $"{parentPath}{directoryName}/";
 
                 if (!directoryMappings.TryGetValue(currentPath, out var currentDirectory))
                 {
@@ -123,9 +132,11 @@ public class NewProjectCommand : Command
                 {
                     var reader = new StreamReader(entry.Open());
 
-                    string content = await reader.ReadToEndAsync();
+                    var content = await reader.ReadToEndAsync();
 
-                    content = content.Replace(NAME, viewModel.ProjectName);
+                    content = content
+                        .Replace(PROJECTNAME, viewModel.ProjectName)
+                        .Replace(PROJECTSUBNAME, subname);
 
                     await writer.WriteAsync(content);
                 }

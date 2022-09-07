@@ -24,13 +24,13 @@ public class RemoveSchemaCommand : Command
 
         if (await dialog.Result is { Data: true } && _workspace.SelectedSchema is not null)
         {
-            _workspace.Schemas.Remove(_workspace.SelectedSchema);
+            _ = _workspace.Schemas.Remove(_workspace.SelectedSchema);
 
             _workspace.StateHasChanged();
 
             await _handler.DeleteAsync(_workspace.SelectedSchema);
 
-            _workspace.Snackbar.Add("Schema Deleted", Severity.Success);
+            _ = _workspace.Snackbar.Add("Schema Deleted", Severity.Success);
         }
 
         base.Execute(parameter);
