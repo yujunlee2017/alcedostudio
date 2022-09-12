@@ -1,6 +1,6 @@
 ﻿<MudDialog>
     <DialogContent>
-        <MudForm @ref="NewProjectForm">
+        <MudForm @ref="CloneProjectForm">
             <MudTextField @bind-Value="@CloneProjectModel.ProjectName"
                           Label="Project Name"
                           AutoFocus="true"
@@ -38,16 +38,16 @@
     [Inject] public HttpClient HttpClient { get; set; } = null!;
     [Inject] public FileSystemAccessService FileSystemService { get; set; } = null!;
 
-    public MudForm? NewProjectForm { get; set; }
+    public MudForm? CloneProjectForm { get; set; }
     public CloneProjectViewModel CloneProjectModel { get; set; } = new();
 
     public async void Submit()
     {
-        if (this.NewProjectForm is not null)
+        if (this.CloneProjectForm is not null)
         {
-            await this.NewProjectForm.Validate();
+            await this.CloneProjectForm.Validate();
 
-            if (this.NewProjectForm.IsValid)
+            if (this.CloneProjectForm.IsValid)
             {
                 this.Instance.Close(CloneProjectModel);
             }
