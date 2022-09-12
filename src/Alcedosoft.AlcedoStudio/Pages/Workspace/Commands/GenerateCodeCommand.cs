@@ -36,45 +36,44 @@ public partial class GenerateCodeCommand : Command
 
     private async Task GenerateAbpEFCoreBlazorAsync(FileSystemDirectoryHandle solutionDirectory)
     {
+        var values = await solutionDirectory.ValuesAsync();
+
+        var solutionFile = values.FirstOrDefault(x => x.Name.EndsWith(".sln"));
+
+        if (solutionFile is null)
+        {
+            _ = _workspace.Snackbar.Add(".sln file not found", Severity.Warning);
+
+            return;
+        }
+
+        var projectName = new ProjectName(Path.GetFileNameWithoutExtension(solutionFile.Name));
+
+        var src = await solutionDirectory.GetDirectoryHandleAsync("src", new(){ Create = true});
+
         foreach (var schema in _workspace.Schemas)
         {
-            var entityName = $"{schema.Name}.cs";
-            var contextName = $"{schema.Name}Context.cs";
-            _ = $"{schema.Name}Controller.cs";
-
-            var currentDirectory = await projectDirectory
-                    .GetDirectoryHandleAsync($"{schema.Name}s", new() { Create = true });
-
-            var entityHandle = await currentDirectory
-                    .GetFileHandleAsync(entityName, new() { Create = true });
-            var entityWriter = await entityHandle
-                    .CreateWritableAsync(new() { KeepExistingData = false });
-            var entityContent = GenerateEntity(projectDirectory.Name, schema);
-            await entityWriter.WriteAsync(entityContent);
-            await entityWriter.CloseAsync();
-
-            var contextHandle = await currentDirectory
-                    .GetFileHandleAsync(contextName, new() { Create = true });
-            var contextWriter = await contextHandle
-                    .CreateWritableAsync(new() { KeepExistingData = false });
-            var contextContent = GenerateContext(projectDirectory.Name, schema);
-            await contextWriter.WriteAsync(contextContent);
-            await contextWriter.CloseAsync();
-
-            //var controllerHandle = await currentDirectory
-            //    .GetFileHandleAsync(controllerName, new() { Create = true });
-            //var controllerWriter = await controllerHandle
-            //    .CreateWritableAsync(new() { KeepExistingData = false });
-            //var contollerContent = GenerateController(projectDirectory.Name, schema);
-            //await controllerWriter.WriteAsync(contollerContent);
-            //await controllerWriter.CloseAsync();
+            await GenerateModelAsync(projectName, src, schema);
+            await GenerateServiceAsync(projectName, src, schema);
+            await GeneratePageAsync(projectName, src, schema);
         }
+
+        await GenerateAdapterAsync(projectName, src, _workspace.Schemas);
+        await GenerateContextAsync(projectName, src, _workspace.Schemas);
+        await GeneratePermissionAsync(projectName, src, _workspace.Schemas);
+        await GenerateMenuAsync(projectName, src, _workspace.Schemas);
+        await GenerateLocalizationAsync(projectName, src, _workspace.Schemas);
 
         _ = _workspace.Snackbar.Add("Code Generated", Severity.Success);
 
-        if (_workspace.DirectoryHandle is not null)
-        {
-            await _openCommand.LoadDirectory(_workspace.DirectoryHandle);
-        }
+        await _openCommand.LoadDirectory(solutionDirectory);
+    }
+
+    private async Task WriteTextAsync(FileSystemFileHandle file, string content)
+    {
+        var writer = await file
+            .CreateWritableAsync(new() { KeepExistingData = false });
+        await writer.WriteAsync(content);
+        await writer.CloseAsync();
     }
 }
