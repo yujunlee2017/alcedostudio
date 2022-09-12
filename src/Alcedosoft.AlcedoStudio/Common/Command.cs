@@ -11,5 +11,6 @@ public abstract class Command : ICommand
 
     public virtual void Execute(object? parameter)
     {
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -4,13 +4,11 @@ public class OpenProjectCommand : Command
 {
     private readonly Workspace _workspace;
     private readonly SchemaHandler _schemaHandler;
-    private readonly SolutionHandler _solutionHandler;
 
     public OpenProjectCommand(Workspace workspace)
     {
         _workspace = workspace;
         _schemaHandler = new(workspace);
-        _solutionHandler = new(workspace);
     }
 
     public override async void Execute(object? parameter)
