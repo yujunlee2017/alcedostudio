@@ -24,14 +24,30 @@
                        Icon="@Icons.Filled.ViewInAr"
                        Color="Color.Primary"
                        Title="Generate Code" />
+
+
+            <MudIconButton Command="SyncToCloudCommand"
+                       Icon="@Icons.Filled.Backup"
+                       Color="Color.Tertiary"
+                       Title="Sync To Cloud" />
         }
         else
         {
+            <MudIconButton Href="git-client://clone?repo=https://alcedo.studio"
+                       Target="_blank"
+                       Icon="@Icons.Custom.Brands.MicrosoftVisualStudio"
+                       Color="Color.Primary"
+                       Title="Open In Microsoft Visual Studio" />
             <MudIconButton Href="vscode://"
                        Target="_blank"
                        Icon="@Icons.Custom.Brands.MicrosoftVisualStudio"
                        Color="Color.Info"
-                       Title="Open In VSCode" />
+                       Title="Open In Visual Studio Code" />
+            <MudIconButton Href="https://www.aipuyang.com"
+                       Target="_blank"
+                       Icon="@Icons.Filled.LogoDev"
+                       Color="Color.Default"
+                       Title="Open In DevMagic Studio" />
         }
 
         <MudSpacer />
@@ -105,4 +121,5 @@
 
     [Parameter] public ICommand ClickItemCommand { get; set; } = null!;
     [Parameter] public ICommand GenerateCodeCommand { get; set; } = null!;
+    [Parameter] public ICommand SyncToCloudCommand { get; set; } = null!;
 }

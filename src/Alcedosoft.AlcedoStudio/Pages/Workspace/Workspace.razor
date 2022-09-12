@@ -23,7 +23,8 @@ else
                            Schemas="Schemas"
                            FileSystemItems="FileSystemItems"
                            ClickItemCommand="ClickItemCommand"
-                           GenerateCodeCommand="GenerateCodeCommand" />
+                           GenerateCodeCommand="GenerateCodeCommand"
+                           SyncToCloudCommand="SyncToCloudCommand" />
         </MudItem>
 
         <MudItem lg="8">
@@ -54,6 +55,7 @@ else
 
     public ICommand ClickItemCommand => new ClickItemCommand(this);
     public ICommand GenerateCodeCommand => new GenerateCodeCommand(this);
+    public ICommand SyncToCloudCommand => new SyncToCloudCommand(this);
 
     public FileSchema? SelectedSchema { get; set; }
     public FileSystemItem? SelectedItem { get; set; }
