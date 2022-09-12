@@ -2190,9 +2190,8 @@ xtend@~4.0.0, xtend@~4.0.1:
   resolved "https://registry.npmjs.org/xtend/-/xtend-4.0.1.tgz"
 
 y18n@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.npmjs.org/y18n/-/y18n-3.2.1.tgz"
-  integrity "sha1-bRX7qITAhnnA136I53WegR4H+kE= sha512-Vd1yWKYGMtzFB6bAuTI7/POwJnwQStQXOe1PW1GmjUZgkaKYGc6/Pl3IDGFgplEklF65niuwBHeS5yve4+U01Q=="
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.2.tgz#85c901bd6470ce71fc4bb723ad209b70f7f28696"
 
 yargs-parser@^5.0.0:
   version "5.0.0"
