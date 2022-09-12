@@ -7,6 +7,7 @@ src/[PROJECTNAME].Application/[PROJECTNAME].Application.csproj
 src/[PROJECTNAME].Application/[PROJECTSUBNAME]ApplicationAutoMapperProfile.cs
 src/[PROJECTNAME].Application/[PROJECTSUBNAME]ApplicationModule.cs
 src/[PROJECTNAME].Application/[PROJECTSUBNAME]AppService.cs
+src/[PROJECTNAME].Application/Usings.cs
 
 src/[PROJECTNAME].Application.Contracts
 src/[PROJECTNAME].Application.Contracts/Permissions/[PROJECTSUBNAME]PermissionDefinitionProvider.cs
@@ -14,6 +15,7 @@ src/[PROJECTNAME].Application.Contracts/Permissions/[PROJECTSUBNAME]Permissions.
 src/[PROJECTNAME].Application.Contracts/[PROJECTNAME].Application.Contracts.csproj
 src/[PROJECTNAME].Application.Contracts/[PROJECTSUBNAME]ApplicationContractsModule.cs
 src/[PROJECTNAME].Application.Contracts/[PROJECTSUBNAME]DtoExtensions.cs
+src/[PROJECTNAME].Application.Contracts/Usings.cs
 
 src/[PROJECTNAME].Blazor
 src/[PROJECTNAME].Blazor/Menus/[PROJECTSUBNAME]MenuContributor.cs
@@ -31,6 +33,7 @@ src/[PROJECTNAME].Blazor/[PROJECTSUBNAME]BrandingProvider.cs
 src/[PROJECTNAME].Blazor/[PROJECTSUBNAME]BundleContributor.cs
 src/[PROJECTNAME].Blazor/[PROJECTSUBNAME]ComponentBase.cs
 src/[PROJECTNAME].Blazor/Program.cs
+src/[PROJECTNAME].Blazor/Usings.cs
 
 src/[PROJECTNAME].DbMigrator
 src/[PROJECTNAME].DbMigrator/[PROJECTNAME].DbMigrator.csproj
@@ -38,6 +41,7 @@ src/[PROJECTNAME].DbMigrator/[PROJECTSUBNAME]DbMigratorModule.cs
 src/[PROJECTNAME].DbMigrator/appsettings.json
 src/[PROJECTNAME].DbMigrator/DbMigratorHostedService.cs
 src/[PROJECTNAME].DbMigrator/Program.cs
+src/[PROJECTNAME].DbMigrator/Usings.cs
 
 src/[PROJECTNAME].Domain
 src/[PROJECTNAME].Domain/Data/[PROJECTSUBNAME]DbMigrationService.cs
@@ -50,6 +54,7 @@ src/[PROJECTNAME].Domain/[PROJECTNAME].Domain.csproj
 src/[PROJECTNAME].Domain/[PROJECTSUBNAME]Consts.cs
 src/[PROJECTNAME].Domain/[PROJECTSUBNAME]DataSeedContributor.cs
 src/[PROJECTNAME].Domain/[PROJECTSUBNAME]DomainModule.cs
+src/[PROJECTNAME].Domain/Usings.cs
 
 src/[PROJECTNAME].Domain.Shared
 src/[PROJECTNAME].Domain.Shared/Localization/[PROJECTSUBNAME]
@@ -60,6 +65,7 @@ src/[PROJECTNAME].Domain.Shared/[PROJECTSUBNAME]DomainErrorCodes.cs
 src/[PROJECTNAME].Domain.Shared/[PROJECTSUBNAME]DomainSharedModule.cs
 src/[PROJECTNAME].Domain.Shared/[PROJECTSUBNAME]GlobalFeatureConfigurator.cs
 src/[PROJECTNAME].Domain.Shared/[PROJECTSUBNAME]ModuleExtensionConfigurator.cs
+src/[PROJECTNAME].Domain.Shared/Usings.cs
 
 src/[PROJECTNAME].EntityFrameworkCore
 src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/[PROJECTSUBNAME]DbContext.cs
@@ -68,15 +74,18 @@ src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/[PROJECTSUBNAME]EFCore
 src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/[PROJECTSUBNAME]EntityFrameworkCoreModule.cs
 src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/EntityFrameworkCore[PROJECTSUBNAME]DbSchemaMigrator.cs
 src/[PROJECTNAME].EntityFrameworkCore/[PROJECTNAME].EntityFrameworkCore.csproj
+src/[PROJECTNAME].EntityFrameworkCore/Usings.cs
 
 src/[PROJECTNAME].HttpApi
 src/[PROJECTNAME].HttpApi/Controllers/[PROJECTSUBNAME]Controller.cs
 src/[PROJECTNAME].HttpApi/[PROJECTNAME].HttpApi.csproj
 src/[PROJECTNAME].HttpApi/[PROJECTSUBNAME]HttpApiModule.cs
+src/[PROJECTNAME].HttpApi/Usings.cs
 
 src/[PROJECTNAME].HttpApi.Client
 src/[PROJECTNAME].HttpApi.Client/[PROJECTNAME].HttpApi.Client.csproj
 src/[PROJECTNAME].HttpApi.Client/[PROJECTSUBNAME]HttpApiClientModule.cs
+src/[PROJECTNAME].HttpApi.Client/Usings.cs
 
 src/[PROJECTNAME].HttpApi.Host
 src/[PROJECTNAME].HttpApi.Host/Controllers/HomeController.cs
@@ -86,18 +95,21 @@ src/[PROJECTNAME].HttpApi.Host/[PROJECTSUBNAME]BrandingProvider.cs
 src/[PROJECTNAME].HttpApi.Host/[PROJECTSUBNAME]HttpApiHostModule.cs
 src/[PROJECTNAME].HttpApi.Host/appsettings.json
 src/[PROJECTNAME].HttpApi.Host/Program.cs
+src/[PROJECTNAME].HttpApi.Host/Usings.cs
 
 test/[PROJECTNAME].Application.Tests
 test/[PROJECTNAME].Application.Tests/Samples/SampleAppServiceTests.cs
 test/[PROJECTNAME].Application.Tests/[PROJECTNAME].Application.Tests.csproj
 test/[PROJECTNAME].Application.Tests/[PROJECTSUBNAME]ApplicationTestBase.cs
 test/[PROJECTNAME].Application.Tests/[PROJECTSUBNAME]ApplicationTestModule.cs
+test/[PROJECTNAME].Application.Tests/Usings.cs
 
 test/[PROJECTNAME].Domain.Tests
 test/[PROJECTNAME].Domain.Tests/Samples/SampleDomainTests.cs
 test/[PROJECTNAME].Domain.Tests/[PROJECTNAME].Domain.Tests.csproj
 test/[PROJECTNAME].Domain.Tests/[PROJECTSUBNAME]DomainTestBase.cs
 test/[PROJECTNAME].Domain.Tests/[PROJECTSUBNAME]DomainTestModule.cs
+test/[PROJECTNAME].Domain.Tests/Usings.cs
 
 test/[PROJECTNAME].EntityFrameworkCore.Tests
 test/[PROJECTNAME].EntityFrameworkCore.Tests/EntityFrameworkCore/
@@ -105,12 +117,14 @@ test/[PROJECTNAME].EntityFrameworkCore.Tests/EntityFrameworkCore/Samples/SampleR
 test/[PROJECTNAME].EntityFrameworkCore.Tests/EntityFrameworkCore/[PROJECTSUBNAME]EntityFrameworkCoreTestBase.cs
 test/[PROJECTNAME].EntityFrameworkCore.Tests/EntityFrameworkCore/[PROJECTSUBNAME]EntityFrameworkCoreTestModule.cs
 test/[PROJECTNAME].EntityFrameworkCore.Tests/[PROJECTNAME].EntityFrameworkCore.Tests.csproj
+test/[PROJECTNAME].EntityFrameworkCore.Tests/Usings.cs
 
 test/[PROJECTNAME].HttpApi.Client.ConsoleTestApp
 test/[PROJECTNAME].HttpApi.Client.ConsoleTestApp/[PROJECTNAME].HttpApi.Client.ConsoleTestApp.csproj
 test/[PROJECTNAME].HttpApi.Client.ConsoleTestApp/[PROJECTSUBNAME]ConsoleApiClientModule.cs
 test/[PROJECTNAME].HttpApi.Client.ConsoleTestApp/ClientDemoService.cs
 test/[PROJECTNAME].HttpApi.Client.ConsoleTestApp/ConsoleTestAppHostedService.cs
+test/[PROJECTNAME].HttpApi.Client.ConsoleTestApp/Usings.cs
 
 test/[PROJECTNAME].TestBase
 test/[PROJECTNAME].TestBase/Security/FakeCurrentPrincipalAccessor.cs
@@ -118,3 +132,4 @@ test/[PROJECTNAME].TestBase/[PROJECTNAME].TestBase.csproj
 test/[PROJECTNAME].TestBase/[PROJECTSUBNAME]TestBase.cs
 test/[PROJECTNAME].TestBase/[PROJECTSUBNAME]TestBaseModule.cs
 test/[PROJECTNAME].TestBase/[PROJECTSUBNAME]TestDataSeedContributor.cs
+test/[PROJECTNAME].TestBase/Usings.cs

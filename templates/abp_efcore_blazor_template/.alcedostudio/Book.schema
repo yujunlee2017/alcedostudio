@@ -5,19 +5,19 @@
   "Items": [
     {
       "Name": "Id",
-      "Type": "int",
+      "DataType": "int",
       "DisplayName": "编号",
       "Description": "图书编号"
     },
     {
       "Name": "Title",
-      "Type": "string",
+      "DataType": "string",
       "DisplayName": "名称",
       "Description": "图书名称"
     },
     {
       "Name": "Description",
-      "Type": "string",
+      "DataType": "string",
       "DisplayName": "简介",
       "Description": "图书简介"
     }
