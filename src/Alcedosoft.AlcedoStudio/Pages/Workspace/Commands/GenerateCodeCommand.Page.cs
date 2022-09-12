@@ -73,9 +73,9 @@ public partial class GenerateCodeCommand
 @code {{
     public {schemaName.PluralPascalName}()
     {{
-        CreatePolicyName = BlogStorePermissions.{schemaName.PluralPascalName}.Create;
-        UpdatePolicyName = BlogStorePermissions.{schemaName.PluralPascalName}.Update;
-        DeletePolicyName = BlogStorePermissions.{schemaName.PluralPascalName}.Delete;
+        CreatePolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Create;
+        UpdatePolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Update;
+        DeletePolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Delete;
     }}
 }}
 ";
@@ -133,7 +133,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <NumericEdit TValue=""{item.DataType}"" @bind-Text=""@NewEntity.{item.Name}"">
+                            <NumericEdit TValue=""{item.DataType}"" Placeholder=""{item.Description}"" @bind-Text=""@NewEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -158,7 +158,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <DateEdit TValue=""DateTime"" @bind-Text=""@NewEntity.{item.Name}"">
+                            <DateEdit TValue=""DateTime"" Placeholder=""{item.Description}"" @bind-Text=""@NewEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -172,7 +172,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <TextEdit @bind-Text=""@NewEntity.{item.Name}"">
+                            <TextEdit Placeholder=""{item.Description}"" @bind-Text=""@NewEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -219,7 +219,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <NumericEdit TValue=""{item.DataType}"" @bind-Text=""@EditingEntity.{item.Name}"">
+                            <NumericEdit TValue=""{item.DataType}"" Placeholder=""{item.Description}"" @bind-Text=""@EditingEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -244,7 +244,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <DateEdit TValue=""DateTime"" @bind-Text=""@EditingEntity.{item.Name}"">
+                            <DateEdit TValue=""DateTime"" Placeholder=""{item.Description}"" @bind-Text=""@EditingEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -258,7 +258,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <TextEdit @bind-Text=""@EditingEntity.{item.Name}"">
+                            <TextEdit Placeholder=""{item.Description}"" @bind-Text=""@EditingEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
