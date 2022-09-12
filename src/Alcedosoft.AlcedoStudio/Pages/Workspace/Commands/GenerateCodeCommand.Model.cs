@@ -14,11 +14,26 @@ public partial class GenerateCodeCommand : Command
         foreach (var item in schema.Items)
         {
             _ = builder.AppendLine($"    [DisplayName(\"{item.DisplayName}\")]");
-            _ = builder.AppendLine($"    public {item.Type} {item.Name} {{ get; set; }}");
+            _ = builder.AppendLine($"    public {item.DataType} {item.Name} {{ get; set; }}");
         }
 
         _ = builder.AppendLine($"}}");
 
         return builder.ToString();
+    }
+
+    public string GenerateQueryDto(string projectName, FileSchema schema)
+    {
+        return String.Empty;
+    }
+
+    public string GenerateCreateDto(string projectName, FileSchema schema)
+    {
+        return String.Empty;
+    }
+
+    public string GenerateUpdateDto(string projectName, FileSchema schema)
+    {
+        return String.Empty;
     }
 }

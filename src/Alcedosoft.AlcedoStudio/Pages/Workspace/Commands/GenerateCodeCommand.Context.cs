@@ -12,4 +12,9 @@ public partial class DataContext
 }}
 ";
     }
+
+    public string GenerateDataSeed(string projectName, FileSchema schema)
+    {
+        return String.Empty;
+    }
 }

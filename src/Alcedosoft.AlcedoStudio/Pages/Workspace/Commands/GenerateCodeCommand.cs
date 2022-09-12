@@ -23,7 +23,9 @@ public partial class GenerateCodeCommand : Command
             {
                 var entityName = $"{schema.Name}.cs";
                 var contextName = $"{schema.Name}Context.cs";
-                var controllerName = $"{schema.Name}Controller.cs";
+
+                string? controllerName;
+                _ = $"{schema.Name}Controller.cs";
 
                 var currentDirectory = await projectDirectory
                     .GetDirectoryHandleAsync($"{schema.Name}s", new() { Create = true });
@@ -44,13 +46,13 @@ public partial class GenerateCodeCommand : Command
                 await contextWriter.WriteAsync(contextContent);
                 await contextWriter.CloseAsync();
 
-                var controllerHandle = await currentDirectory
-                    .GetFileHandleAsync(controllerName, new() { Create = true });
-                var controllerWriter = await controllerHandle
-                    .CreateWritableAsync(new() { KeepExistingData = false });
-                var contollerContent = GenerateController(projectDirectory.Name, schema);
-                await controllerWriter.WriteAsync(contollerContent);
-                await controllerWriter.CloseAsync();
+                //var controllerHandle = await currentDirectory
+                //    .GetFileHandleAsync(controllerName, new() { Create = true });
+                //var controllerWriter = await controllerHandle
+                //    .CreateWritableAsync(new() { KeepExistingData = false });
+                //var contollerContent = GenerateController(projectDirectory.Name, schema);
+                //await controllerWriter.WriteAsync(contollerContent);
+                //await controllerWriter.CloseAsync();
             }
 
             _ = _workspace.Snackbar.Add("Code Generated", Severity.Success);
