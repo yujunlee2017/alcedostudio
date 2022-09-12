@@ -1,31 +1,29 @@
 ﻿<MudDataGrid T="FileSchemaItem"
              Items="@Schema.Items"
              Dense="true"
+             Bordered="true"
              ReadOnly="false"
-             SortMode="SortMode.None"
              EditMode="DataGridEditMode.Cell"
-             EditTrigger="DataGridEditTrigger.OnRowClick"
              CommittedItemChanges="OnItemChanged">
     <Columns>
         <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Name)" />
-        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Type)">
+        <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.DataType)">
             <EditTemplate>
                 <MudSelect T="string"
-                           Value="context.Item.Type"
+                           Value="context.Item.DataType"
+                           AnchorOrigin="Origin.BottomCenter"
                            ValueChanged="type => OnTypeChanged(context, type)">
                     <MudSelectItem Value="@("string")">string</MudSelectItem>
                     <MudSelectItem Value="@("int")">int</MudSelectItem>
                     <MudSelectItem Value="@("bool")">bool</MudSelectItem>
-                    <MudSelectItem Value="@("long")">long</MudSelectItem>
                     <MudSelectItem Value="@("float")">float</MudSelectItem>
-                    <MudSelectItem Value="@("double")">double</MudSelectItem>
                     <MudSelectItem Value="@("DateTime")">DateTime</MudSelectItem>
                 </MudSelect>
             </EditTemplate>
         </Column>
         <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.DisplayName)" />
         <Column T="FileSchemaItem" Field="@nameof(FileSchemaItem.Description)" />
-        <Column T="FileSchemaItem" IsEditable="false">
+        <Column T="FileSchemaItem" IsEditable="false" Sortable="false">
             <HeaderTemplate>
                 <MudIconButton Icon="@Icons.Filled.Add" Color="Color.Tertiary" OnClick="CreateItem" />
             </HeaderTemplate>
@@ -46,7 +44,7 @@
         this.Schema.Items.Add(new()
             {
                 Name = "Field1",
-                Type = "string",
+                DataType = "string",
                 DisplayName = "Field1",
                 Description = "Field1",
             });
@@ -60,7 +58,7 @@
     {
         var parameters = new DialogParameters
         {
-            { "Message", "Do you really want to delete the schema? This process cannot be undone." },
+            { "Message", "Do you really want to delete the item? This process cannot be undone." },
             { "ButtonText", "Delete" },
             { "ButtonColor", Color.Error }
         };
@@ -71,13 +69,15 @@
         {
             Schema.Items.Remove(item);
 
+            await this.SaveAsync();
+
             this.Snackbar.Add("Item Deleted", Severity.Success);
         }
     }
 
     public async Task OnTypeChanged(CellContext<FileSchemaItem> context, string type)
     {
-        context.Item.Type = type;
+        context.Item.DataType = type;
 
         context.Actions.CancelEditingItem();
 
@@ -96,7 +96,7 @@
         if (Schema.Handle is not null)
         {
             var writer = await Schema.Handle
-                .CreateWritableAsync(new() { KeepExistingData = false });
+            .CreateWritableAsync(new() { KeepExistingData = false });
 
             await writer.WriteAsync(JsonSerializer.Serialize(Schema));
 
