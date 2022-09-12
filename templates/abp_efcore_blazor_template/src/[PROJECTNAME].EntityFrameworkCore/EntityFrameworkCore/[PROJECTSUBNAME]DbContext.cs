@@ -3,7 +3,7 @@
 [ReplaceDbContext(typeof(IIdentityDbContext))]
 [ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
-public class [PROJECTSUBNAME]DbContext :
+public partial class [PROJECTSUBNAME]DbContext :
     AbpDbContext<[PROJECTSUBNAME]DbContext>,
     IIdentityDbContext,
     ITenantManagementDbContext

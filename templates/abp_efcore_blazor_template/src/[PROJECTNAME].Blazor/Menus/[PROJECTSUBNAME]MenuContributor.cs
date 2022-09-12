@@ -1,6 +1,6 @@
 ﻿namespace [PROJECTNAME];
 
-public class [PROJECTSUBNAME]MenuContributor : IMenuContributor
+public partial class [PROJECTSUBNAME]MenuContributor : IMenuContributor
 {
     private readonly IConfiguration _configuration;
 
@@ -19,23 +19,6 @@ public class [PROJECTSUBNAME]MenuContributor : IMenuContributor
         {
             await ConfigureUserMenuAsync(context);
         }
-    }
-
-    private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
-    {
-        var l = context.GetLocalizer<[PROJECTSUBNAME]Resource>();
-
-        context.Menu.Items.Insert(
-            0,
-            new ApplicationMenuItem(
-                [PROJECTSUBNAME]Menus.Home,
-                l["Menu:Home"],
-                "/",
-                icon: "fas fa-home"
-            )
-        );
-
-        return Task.CompletedTask;
     }
 
     private Task ConfigureUserMenuAsync(MenuConfigurationContext context)
