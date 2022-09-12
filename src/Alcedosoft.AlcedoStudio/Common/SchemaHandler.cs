@@ -33,7 +33,12 @@ public class SchemaHandler
             var writer = await schema.Handle
                 .CreateWritableAsync(new() { KeepExistingData = false });
 
-            await writer.WriteAsync(JsonSerializer.Serialize(schema));
+            await writer.WriteAsync(JsonSerializer.Serialize(schema, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            }));
 
             await writer.CloseAsync();
         }

@@ -10,8 +10,11 @@ public partial class GenerateCodeCommand
         var blazor = await src.GetDirectoryHandleAsync(
             $"{projectName.Value}.Blazor", new(){ Create = true});
 
-        var pageFile = await blazor.GetFileHandleAsync(
-            $"{schemaName.PluralPascalName}.cs", new(){ Create = true });
+        var pageDir = await blazor.GetDirectoryHandleAsync(
+            "Pages", new(){ Create = true });
+
+        var pageFile = await pageDir.GetFileHandleAsync(
+            $"{schemaName.PluralPascalName}.razor", new(){ Create = true });
 
         var pageContent = GeneratePage(projectName, schema);
 
@@ -22,11 +25,12 @@ public partial class GenerateCodeCommand
     {
         var schemaName = new SchemaName(schema.Name);
 
-        var list = GenerateList( schema, schemaName);
-        var create = GenerateCreate( schema, schemaName);
-        var update = GenerateCreate( schema, schemaName);
+        var list = GenerateList(schema, schemaName);
+        var create = GenerateCreate(schema, schemaName);
+        var update = GenerateUpdate(schema, schemaName);
 
         return $@"@page ""/{schemaName.PluralCamelName}""
+@inject IStringLocalizer<{projectName.PascalSubName}Resource> L
 @inject AbpBlazorMessageLocalizerHelper<{projectName.PascalSubName}Resource> LH
 @inherits AbpCrudPageBase<I{schemaName.PascalName}AppService, {schemaName.PascalName}QueryDto, {schemaName.PascalName}QueryDto, Guid, PagedAndSortedResultRequestDto, {schemaName.PascalName}CreateDto, {schemaName.PascalName}UpdateDto>
 
@@ -70,7 +74,7 @@ public partial class GenerateCodeCommand
     public {schemaName.PluralPascalName}()
     {{
         CreatePolicyName = BlogStorePermissions.{schemaName.PluralPascalName}.Create;
-        UpdatePolicyName = BlogStorePermissions.{schemaName.PluralPascalName}.Edit;
+        UpdatePolicyName = BlogStorePermissions.{schemaName.PluralPascalName}.Update;
         DeletePolicyName = BlogStorePermissions.{schemaName.PluralPascalName}.Delete;
     }}
 }}
@@ -197,7 +201,7 @@ public partial class GenerateCodeCommand
                         Type=""@ButtonType.Submit""
                         PreventDefaultOnSubmit=""true""
                         Clicked=""CreateEntityAsync"">
-                    @L[""Submit""]
+                    @L[""Save""]
                 </Button>
             </ModalFooter>
         </Form>";
@@ -215,7 +219,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <NumericEdit TValue=""{item.DataType}"" @bind-Text=""@NewEntity.{item.Name}"">
+                            <NumericEdit TValue=""{item.DataType}"" @bind-Text=""@EditingEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -228,7 +232,7 @@ public partial class GenerateCodeCommand
                 _ = fields.AppendLine($@"
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
-                            <Check TValue=""bool"" @bind-Checked=""@NewEntity.{item.Name}"">
+                            <Check TValue=""bool"" @bind-Checked=""@EditingEntity.{item.Name}"">
                                 @L[""{schemaName.PascalName}:{item.Name}""]
                             </Check>
                         </Field>
@@ -240,7 +244,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <DateEdit TValue=""DateTime"" @bind-Text=""@NewEntity.{item.Name}"">
+                            <DateEdit TValue=""DateTime"" @bind-Text=""@EditingEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -254,7 +258,7 @@ public partial class GenerateCodeCommand
                     <Validation MessageLocalizer=""@LH.Localize"">
                         <Field>
                             <FieldLabel>@L[""{schemaName.PascalName}:{item.Name}""]</FieldLabel>
-                            <TextEdit @bind-Text=""@NewEntity.{item.Name}"">
+                            <TextEdit @bind-Text=""@EditingEntity.{item.Name}"">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -266,11 +270,11 @@ public partial class GenerateCodeCommand
 
         return $@"<Form>
             <ModalHeader>
-                <ModalTitle>@EditingEntity.Title</ModalTitle>
+                <ModalTitle>@EditingEntity.Id</ModalTitle>
                 <CloseButton Clicked=""CloseEditModalAsync"" />
             </ModalHeader>
             <ModalBody>
-                <Validations @ref=""@EditValidationsRef"" Model=""@EditModal"" ValidateOnLoad=""false"">
+                <Validations @ref=""@EditValidationsRef"" Model=""@EditingEntity"" ValidateOnLoad=""false"">
 {fields}
                 </Validations>
             </ModalBody>
@@ -283,7 +287,7 @@ public partial class GenerateCodeCommand
                         Type=""@ButtonType.Submit""
                         PreventDefaultOnSubmit=""true""
                         Clicked=""UpdateEntityAsync"">
-                    @L[""Submit""]
+                    @L[""Save""]
                 </Button>
             </ModalFooter>
         </Form>";

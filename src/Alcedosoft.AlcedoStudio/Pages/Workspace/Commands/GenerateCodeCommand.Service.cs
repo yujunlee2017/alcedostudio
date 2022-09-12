@@ -58,7 +58,7 @@ public class {schemaName.PascalName}AppService : CrudAppService<
         GetPolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Default;
         GetListPolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Default;
         CreatePolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Create;
-        UpdatePolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Edit;
+        UpdatePolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Update;
         DeletePolicyName = {projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Delete;
     }}
 }}

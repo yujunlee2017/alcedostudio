@@ -8,9 +8,12 @@ public partial class GenerateCodeCommand
         var blazor = await src.GetDirectoryHandleAsync(
             $"{projectName.Value}.Blazor", new(){ Create = true});
 
-        var constFile = await blazor.GetFileHandleAsync(
+        var menuDir = await blazor.GetDirectoryHandleAsync(
+            "Menus", new(){ Create = true });
+
+        var constFile = await menuDir.GetFileHandleAsync(
             $"{projectName.PascalSubName}Menus.cs", new(){ Create = true });
-        var mainMenuFile = await blazor.GetFileHandleAsync(
+        var mainMenuFile = await menuDir.GetFileHandleAsync(
             $"{projectName.PascalSubName}MenuContributor.MainMenu.cs", new(){ Create = true });
 
         var constContent = GenerateMenuConst(projectName, schemas);
@@ -53,14 +56,6 @@ public class {projectName.PascalSubName}Menus
             var schemaName = new SchemaName(schema.Name);
 
             _ = subMenus.AppendLine($@"
-        var {projectName.CamelSubName}Menu = new ApplicationMenuItem(
-            {projectName.PascalSubName}Menus.Prefix,
-            l[""Menu:{projectName.PascalSubName}""],
-            icon: ""fa fa-coffee""
-        );
-
-        _ = context.Menu.AddItem({projectName.CamelSubName}Menu);
-
         if (await context.IsGrantedAsync({projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Default))
         {{
             _ = {projectName.CamelSubName}Menu.AddItem(
@@ -91,6 +86,13 @@ public partial class {projectName.PascalSubName}MenuContributor : IMenuContribut
             )
         );
 
+        var {projectName.CamelSubName}Menu = new ApplicationMenuItem(
+            {projectName.PascalSubName}Menus.Prefix,
+            l[""Menu:{projectName.PascalSubName}""],
+            icon: ""fa fa-coffee""
+        );
+
+        _ = context.Menu.AddItem({projectName.CamelSubName}Menu);
 {subMenus}
     }}
 }}

@@ -36,18 +36,16 @@ public partial class GenerateCodeCommand : Command
     {{
         public const string Default = GroupName + "".{schemaName.PluralPascalName}"";
         public const string Create = Default + "".Create"";
-        public const string Edit = Default + "".Edit"";
+        public const string Update = Default + "".Update"";
         public const string Delete = Default + "".Delete"";
-    }}
-");
+    }}");
         }
 
-        return $@"
-namespace {projectName.Value};
+        return $@"namespace {projectName.Value};
 
-public static class {projectName.CamelSubName}Permissions
+public static class {projectName.PascalSubName}Permissions
 {{
-    public const string GroupName = ""{projectName.CamelSubName}"";
+    public const string GroupName = ""{projectName.PascalSubName}"";
 
     //Add your own permission names. Example:
     //public const string MyPermission1 = GroupName + "".MyPermission1"";
@@ -69,9 +67,8 @@ public static class {projectName.CamelSubName}Permissions
         _ = {projectName.CamelSubName}Group
             .AddPermission({projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Default, L(""Permission:{schemaName.PluralPascalName}""))
             .AddChild({projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Create, L(""Permission:{schemaName.PluralPascalName}.Create""))
-            .AddChild({projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Edit, L(""Permission:{schemaName.PluralPascalName}.Edit""))
-            .AddChild({projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Delete, L(""Permission:{schemaName.PluralPascalName}.Delete""));
-");
+            .AddChild({projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Update, L(""Permission:{schemaName.PluralPascalName}.Update""))
+            .AddChild({projectName.PascalSubName}Permissions.{schemaName.PluralPascalName}.Delete, L(""Permission:{schemaName.PluralPascalName}.Delete""));");
         }
 
         return $@"namespace {projectName.Value};

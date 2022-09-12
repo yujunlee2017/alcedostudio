@@ -45,7 +45,6 @@ public class {projectName.PascalSubName}ApplicationAutoMapperProfile : Profile
         /* You can configure your AutoMapper mapping configuration here.
          * Alternatively, you can split your mapping configurations
          * into multiple profile classes for a better organization. */
-
 {maps}
     }}
 }}
@@ -61,7 +60,7 @@ public class {projectName.PascalSubName}ApplicationAutoMapperProfile : Profile
             var schemaName = new SchemaName(schema.Name);
 
             _ = maps.AppendLine($@"
-        _ = CreateMap<{schemaName.PascalName}QueryDto, {schemaName.PascalName}UpdateDto>()");
+        _ = CreateMap<{schemaName.PascalName}QueryDto, {schemaName.PascalName}UpdateDto>();");
         }
 
         return $@"namespace {projectName.Value};
@@ -71,7 +70,6 @@ public class {projectName.PascalSubName}BlazorAutoMapperProfile : Profile
     public {projectName.PascalSubName}BlazorAutoMapperProfile()
     {{
         //Define your AutoMapper configuration here for the Blazor project.
-
 {maps}
     }}
 }}

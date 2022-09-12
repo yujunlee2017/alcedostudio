@@ -39,80 +39,92 @@ public partial class GenerateCodeCommand : Command
 
     private string GenerateEntity(ProjectName projectName, FileSchema schema)
     {
-        var builder = new StringBuilder();
-
-        _ = builder.AppendLine($"namespace {projectName.Value};");
-        _ = builder.AppendLine($"");
-        _ = builder.AppendLine($"public class {schema.Name} : AuditedAggregateRoot<Guid>");
-        _ = builder.AppendLine($"{{");
+        var properties = new StringBuilder();
 
         foreach (var item in schema.Items)
         {
-            _ = builder.AppendLine($"    public {item.DataType} {item.Name} {{ get; set; }}");
+            _ = properties.AppendLine(@$"
+    /// <summary>
+    /// {item.Description}
+    /// </summary>
+    public {item.DataType} {item.Name} {{ get; set; }}");
         }
 
-        _ = builder.AppendLine($"}}");
+        return $@"namespace {projectName.Value};
 
-        return builder.ToString();
+public class {schema.Name} : AuditedAggregateRoot<Guid>
+{{
+{properties}
+}}
+";
     }
 
     private string GenerateQueryDto(ProjectName projectName, FileSchema schema)
     {
-        var builder = new StringBuilder();
-
-        _ = builder.AppendLine($"namespace {projectName.Value};");
-        _ = builder.AppendLine($"");
-        _ = builder.AppendLine($"public class {schema.Name}QueryDto : AuditedEntityDto<Guid>");
-        _ = builder.AppendLine($"{{");
+        var properties = new StringBuilder();
 
         foreach (var item in schema.Items)
         {
-            _ = builder.AppendLine($"    [DisplayName(\"{item.DisplayName}\")]");
-            _ = builder.AppendLine($"    public {item.DataType} {item.Name} {{ get; set; }}");
+            _ = properties.AppendLine(@$"
+    /// <summary>
+    /// {item.Description}
+    /// </summary>
+    [DisplayName(""{item.DisplayName}"")]
+    public {item.DataType} {item.Name} {{ get; set; }}");
         }
 
-        _ = builder.AppendLine($"}}");
+        return $@"namespace {projectName.Value};
 
-        return builder.ToString();
+public class {schema.Name}QueryDto : AuditedEntityDto<Guid>
+{{
+{properties}
+}}
+";
     }
 
     private string GenerateCreateDto(ProjectName projectName, FileSchema schema)
     {
-        var builder = new StringBuilder();
-
-        _ = builder.AppendLine($"namespace {projectName.Value};");
-        _ = builder.AppendLine($"");
-        _ = builder.AppendLine($"public class {schema.Name}CreateDto : AuditedEntityDto<Guid>");
-        _ = builder.AppendLine($"{{");
+        var properties = new StringBuilder();
 
         foreach (var item in schema.Items)
         {
-            _ = builder.AppendLine($"    [DisplayName(\"{item.DisplayName}\")]");
-            _ = builder.AppendLine($"    public {item.DataType} {item.Name} {{ get; set; }}");
+            _ = properties.AppendLine(@$"
+    /// <summary>
+    /// {item.Description}
+    /// </summary>
+    [DisplayName(""{item.DisplayName}"")]
+    public {item.DataType} {item.Name} {{ get; set; }}");
         }
 
-        _ = builder.AppendLine($"}}");
+        return $@"namespace {projectName.Value};
 
-        return builder.ToString();
+public class {schema.Name}CreateDto : AuditedEntityDto<Guid>
+{{
+{properties}
+}}
+";
     }
 
     private string GenerateUpdateDto(ProjectName projectName, FileSchema schema)
     {
-        var builder = new StringBuilder();
-
-        _ = builder.AppendLine($"namespace {projectName.Value};");
-        _ = builder.AppendLine($"");
-        _ = builder.AppendLine($"public class {schema.Name}UpdateDto : AuditedEntityDto<Guid>");
-        _ = builder.AppendLine($"{{");
+        var properties = new StringBuilder();
 
         foreach (var item in schema.Items)
         {
-            _ = builder.AppendLine($"    [DisplayName(\"{item.DisplayName}\")]");
-            _ = builder.AppendLine($"    public {item.DataType} {item.Name} {{ get; set; }}");
+            _ = properties.AppendLine(@$"
+    /// <summary>
+    /// {item.Description}
+    /// </summary>
+    [DisplayName(""{item.DisplayName}"")]
+    public {item.DataType} {item.Name} {{ get; set; }}");
         }
 
-        _ = builder.AppendLine($"}}");
+        return $@"namespace {projectName.Value};
 
-        return builder.ToString();
+public class {schema.Name}UpdateDto : AuditedEntityDto<Guid>
+{{
+{properties}
+}}
+";
     }
 }

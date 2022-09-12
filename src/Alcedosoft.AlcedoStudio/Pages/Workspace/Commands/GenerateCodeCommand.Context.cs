@@ -28,11 +28,14 @@ public partial class GenerateCodeCommand : Command
 
     private string GenerateDataContext(ProjectName projectName, IEnumerable<FileSchema> schemas)
     {
+        var props = new StringBuilder();
         var entities= new StringBuilder();
 
         foreach (var schema in schemas)
         {
             var schemaName = new SchemaName(schema.Name);
+
+            _ = props.AppendLine($@"    public DbSet<{schemaName.PascalName}> {schemaName.PascalName} {{ get; set; }}");
 
             _ = entities.AppendLine($@"
         _ = builder.Entity<{schemaName.PascalName}>(b =>
@@ -47,6 +50,7 @@ public partial class GenerateCodeCommand : Command
 
 public partial class {projectName.PascalSubName}DbContext
 {{
+{props}
     private void ConfigrationEntity(ModelBuilder builder)
     {{
 {entities}
@@ -66,7 +70,7 @@ public partial class {projectName.PascalSubName}DbContext
 
         for (var i = 1; i <= count; i++)
         {
-            var schema = schemas.ElementAt(i);
+            var schema = schemas.ElementAt(i - 1);
             var schemaName = new SchemaName(schema.Name);
 
             _ = fields.AppendLine($"    private readonly IRepository<{schemaName.PascalName}, Guid> _{schemaName.CamelName}Repository;");

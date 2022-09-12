@@ -9,13 +9,13 @@ public partial class GenerateCodeCommand
             $"{projectName.Value}.Domain.Shared", new(){ Create = true});
 
         var localizationDir = await shared.GetDirectoryHandleAsync(
-            "Permissions", new(){ Create = true});
+            "Localization", new(){ Create = true});
 
         localizationDir = await localizationDir.GetDirectoryHandleAsync(
             projectName.PascalSubName, new() { Create = true });
 
         var zh_HansFile = await localizationDir.GetFileHandleAsync(
-            $"{projectName.PascalSubName}Permissions.cs", new(){ Create = true });
+            "zh-Hans.json", new(){ Create = true });
 
         var zh_HansContent = Generatezh_Hans(projectName, schemas);
 
@@ -30,20 +30,21 @@ public partial class GenerateCodeCommand
         _ = texts.AppendLine(@$"    ""Edit"": ""编辑"",");
         _ = texts.AppendLine(@$"    ""Delete"": ""删除"",");
         _ = texts.AppendLine(@$"    ""Cancel"": ""取消"",");
-        _ = texts.AppendLine(@$"    ""Submit"": ""提交"",");
-
         _ = texts.AppendLine(@$"    ""Menu:Home"": ""首页"",");
+
         _ = texts.AppendLine(@$"    ""Menu:{projectName.PascalSubName}"": ""{projectName.PascalSubName}"",");
+        _ = texts.AppendLine(@$"    ""Permission:{projectName.PascalSubName}"": ""{projectName.PascalSubName}"",");
 
         foreach (var schema in schemas)
         {
             var schemaName = new SchemaName(schema.Name);
 
-            _ = texts.AppendLine(@$"    ""Menu:{schemaName.PluralPascalName}"": ""{schema.DisplayName}列表"",");
+            _ = texts.AppendLine(@$"    ""{schemaName.PluralPascalName}"": ""{schema.Description}"",");
+            _ = texts.AppendLine(@$"    ""Menu:{schemaName.PluralPascalName}"": ""{schema.Description}"",");
 
-            _ = texts.AppendLine(@$"    ""Permission:{schemaName.PluralPascalName}"": ""{schema.DisplayName}列表"",");
+            _ = texts.AppendLine(@$"    ""Permission:{schemaName.PluralPascalName}"": ""{schema.Description}"",");
             _ = texts.AppendLine(@$"    ""Permission:{schemaName.PluralPascalName}.Create"": ""新增{schema.DisplayName}"",");
-            _ = texts.AppendLine(@$"    ""Permission:{schemaName.PluralPascalName}.Edit"": ""修改{schema.DisplayName}"",");
+            _ = texts.AppendLine(@$"    ""Permission:{schemaName.PluralPascalName}.Update"": ""修改{schema.DisplayName}"",");
             _ = texts.AppendLine(@$"    ""Permission:{schemaName.PluralPascalName}.Delete"": ""删除{schema.DisplayName}"",");
 
             foreach (var item in schema.Items)
