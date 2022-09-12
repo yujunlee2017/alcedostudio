@@ -1,0 +1,19 @@
+{
+  "Name": "Article",
+  "DisplayName": "文章",
+  "Description": "文章管理",
+  "Items": [
+    {
+      "Name": "Title",
+      "DataType": "string",
+      "DisplayName": "标题",
+      "Description": "文章标题"
+    },
+    {
+      "Name": "Content",
+      "DataType": "string",
+      "DisplayName": "正文",
+      "Description": "文章正文"
+    }
+  ]
+}

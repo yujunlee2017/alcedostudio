@@ -19,6 +19,7 @@ src/[PROJECTNAME].Application.Contracts/Usings.cs
 
 src/[PROJECTNAME].Blazor
 src/[PROJECTNAME].Blazor/Menus/[PROJECTSUBNAME]MenuContributor.cs
+src/[PROJECTNAME].Blazor/Menus/[PROJECTSUBNAME]MenuContributor.MainMenu.cs
 src/[PROJECTNAME].Blazor/Menus/[PROJECTSUBNAME]Menus.cs
 src/[PROJECTNAME].Blazor/Pages/Index.razor
 src/[PROJECTNAME].Blazor/Pages/Index.razor.cs
@@ -69,6 +70,7 @@ src/[PROJECTNAME].Domain.Shared/Usings.cs
 
 src/[PROJECTNAME].EntityFrameworkCore
 src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/[PROJECTSUBNAME]DbContext.cs
+src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/[PROJECTSUBNAME]DbContext.Entity.cs
 src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/[PROJECTSUBNAME]DbContextFactory.cs
 src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/[PROJECTSUBNAME]EFCoreEntityExtensionMappings.cs
 src/[PROJECTNAME].EntityFrameworkCore/EntityFrameworkCore/[PROJECTSUBNAME]EntityFrameworkCoreModule.cs

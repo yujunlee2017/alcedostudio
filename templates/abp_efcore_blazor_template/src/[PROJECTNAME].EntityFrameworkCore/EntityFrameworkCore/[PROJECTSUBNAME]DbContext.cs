@@ -60,6 +60,8 @@ public partial class [PROJECTSUBNAME]DbContext :
 
         /* Configure your own tables/entities inside here */
 
+        ConfigrationEntity(builder);
+
         //builder.Entity<YourEntity>(b =>
         //{
         //    b.ToTable(BookStoreConsts.DbTablePrefix + "YourEntities", BookStoreConsts.DbSchema);
