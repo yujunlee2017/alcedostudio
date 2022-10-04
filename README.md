@@ -8,8 +8,8 @@
 
 ## 上游项目
 该项目基于以下项目进行构建, 感谢大家的付出 :heart:
-- [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)
-- [ABP Framework](https://abp.io/)
-- [MudBlazor](https://mudblazor.com/)
+- [Blazor](https://blazor.net)
+- [ABP Framework](https://abp.io)
+- [MudBlazor](https://mudblazor.com)
 - [BlazorMonaco](https://github.com/serdarciplak/BlazorMonaco)
 - [FileSystemAccess.Blazor](https://github.com/KristofferStrube/Blazor.FileSystemAccess)
